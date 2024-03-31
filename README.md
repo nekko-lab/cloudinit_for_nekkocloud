@@ -37,19 +37,19 @@ ProxmoxでCloud-Initを使用し、各種VMのデプロイを自動化する。
 - Proxmoxのノードに入り、VMに使用するイメージをダウンロードする
   今回使用したイメージは[Ubuntu server Cloudimg 22.04LTS](https://cloud-images.ubuntu.com/)
   
-```
+```bash
 wget https://cloud-images.ubuntu.com/focal/current/focal-server-cloudimg-amd64.img
 ```
 
 - テンプレート用のVMを作成
 
-```
+```bash
 qm create 9000 --memory 2048 --net0 virtio,bridge=vmbr0
 ```
 
 - ダウンロードしたイメージをlocal-lvmにセット
   
-```
+```bash
 qm set 9000 --scsi0 local-lvm:0,import-from=/root/jammy-server-cloudimg-amd64.img
 ```
 
@@ -65,7 +65,7 @@ qm set 9000 --scsi0 local-lvm:0,import-from=/root/jammy-server-cloudimg-amd64.im
 pveum role add TerraformProvider -privs "Datastore.AllocateSpace Datastore.Audit Pool.Allocate Sys.Audit Sys.Console Sys.Modify VM.Allocate VM.Audit VM.Clone VM.Config.CDROM VM.Config.Cloudinit VM.Config.CPU VM.Config.Disk VM.Config.HWType VM.Config.Memory VM.Config.Network VM.Config.Options VM.Migrate VM.Monitor VM.PowerMgmt SDN.Use"
 ```
 
-- 新しいユーザ`terraform-prov@pve`を作成 @irumaru
+- 新しいユーザ`terraform-prov@pve`を作成
 
 ```bash
 pveum user add terraform-prov@pve --password <password>
@@ -76,8 +76,6 @@ pveum user add terraform-prov@pve --password <password>
 ```bash
 pveum aclmod / -user terraform-prov@pve -role TerraformProvider
 ```
-
-- あ
 
 ---
 

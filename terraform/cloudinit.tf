@@ -1,11 +1,3 @@
-variable username {}
-variable public_key {}
-variable cores {}
-variable memory {}
-variable disk_size {}
-variable ip_address {}
-
-
 terraform {
     required_providers {
         proxmox = {
@@ -17,9 +9,9 @@ terraform {
 
 
 provider "proxmox" {
-    pm_api_token_id = "root@pam!"
-    pm_api_token_secret = ""
-    pm_api_url = "https://hugeslaight:8006/api2/json"
+    pm_api_token_id = PM_API_TOKEN_ID
+    pm_api_token_secret = PM_API_TOKEN_SECRET 
+    pm_api_url = PM_PROV_URL
     pm_tls_insecure = true
     pm_debag = true
 }
