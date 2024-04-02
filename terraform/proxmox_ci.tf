@@ -18,13 +18,13 @@ resource "proxmox_cloud_init_disk" "nc-ur-ci" {
     local-hostname = var.vm_name
   })
 
-  user_data = <<EOT
-#cloud-config
-users:
-  - default
-ssh_authorized_keys:
-  - ssh-rsa AAAAB3N......
-EOT
+#   user_data = <<EOT
+# #cloud-config
+# users:
+#   - default
+# ssh_authorized_keys:
+#   - ssh-rsa AAAAB3N......
+# EOT
 
   network_config = yamlencode({
     version = 1
