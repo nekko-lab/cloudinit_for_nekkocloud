@@ -2,7 +2,6 @@
 
 # locals: Argument reference
 locals {
-    vm_name          = "nc-vm"
     pve_node         = "pve-node-1"
     iso_storage_pool = "cephfs"
     target_node      = "Hugesleigh"
@@ -15,8 +14,8 @@ resource "proxmox_cloud_init_disk" "nc-ur-ci" {
   storage  = local.iso_storage_pool
 
   meta_data = yamlencode({
-    instance_id    = sha1(local.vm_name)
-    local-hostname = local.vm_name
+    instance_id    = sha1(var.vm_name)
+    local-hostname = var.vm_name
   })
 
   user_data = <<EOT

@@ -36,6 +36,13 @@ variable "PM_LOG_FILE" {
 }
 
 # VM CONFIGURATION
+variable "vm_name" {
+    description = "The name of the VM"
+    type = string
+    default = ""
+}
+
+
 variable username {
     description = "The username to assign to the VM"
     type = string

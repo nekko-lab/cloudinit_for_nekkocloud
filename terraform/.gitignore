@@ -1,8 +1,0 @@
-# Terraform for ws1
-# git rm -r --cached .
-.DS_Store
-*.pdf
-*.exe
-.terraform.lock.hcl
-.terraform.tfstate.lock.info
-*.tfvars
