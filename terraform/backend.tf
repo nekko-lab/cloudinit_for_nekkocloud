@@ -10,15 +10,15 @@ terraform {
 
 
 provider "proxmox" {
-    pm_api_url          = PM_PROV_URL
-    pm_user             = PM_USER
-    pm_password         = PM_PASS
-    # pm_api_token_id     = PM_API_TOKEN_ID
-    # pm_api_token_secret = PM_API_TOKEN_SECRET
+    pm_api_url          = var.PM_PROV_URL
+    pm_user             = var.PM_USER
+    pm_password         = var.PM_PASS
+    # pm_api_token_id     = var.PM_API_TOKEN_ID
+    # pm_api_token_secret = varPM_API_TOKEN_SECRET
     pm_tls_insecure     = true
     pm_debug            = true
     pm_log_enable       = true
-    pm_log_file         = PM_LOG_FILE
+    pm_log_file         = var.PM_LOG_FILE
     pm_log_levels       = {
         _default    = "debug"
         # _capturelog = ""

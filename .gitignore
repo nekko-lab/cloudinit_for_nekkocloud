@@ -7,3 +7,5 @@
 .terraform.tfstate.lock.info
 *.tfvars
 .terraform
+*.tfstate
+terraform-plugin-proxmox.log

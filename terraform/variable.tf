@@ -2,30 +2,35 @@
 variable "PM_PROV_URL" {
     description = "The Proxmox Provider URL"
     type = string
+    default = ""
 }
 
 
 variable "PM_USER" {
     description = "The Proxmox user"
     type = string
+    default = ""
 }
 
 
 variable "PM_PASS" {
     description = "The Proxmox login password"
     type = string
+    default = ""
 }
 
 
 variable "PM_API_TOKEN_ID" {
     description = "The Proxmox API Token ID"
     type = string
+    default = ""
 }
 
 
 variable "PM_API_TOKEN_SECRET" {
     description = "The Proxmox API Token Secret"
     type = string
+    default = ""
 }
 
 
@@ -67,10 +72,12 @@ variable ip_address_networkpart {
 variable public_key {
     description = "The public key to be used for SSH"
     type = string
+    default = ""
 }
 
 
 variable private_key {
     description = "The username to assign to the VM"
     type = string
+    default = ""
 }

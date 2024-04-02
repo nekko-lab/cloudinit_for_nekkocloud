@@ -6,12 +6,14 @@ locals {
 
     ubuntu-2204 = "local:iso/jammy-server-cloudimg-amd64.img"
     vmid-0      = 2010
+    replicas-0  = 2
     cores-0     = 2
     memory-0    = 4096
     disk_size-0 = 128
 
     vyos-133    = "local:iso/vyos-1.3.3-amd64.iso"
     vmid-1      = 1900
+    replicas-1  = 1
     cores-1     = 2
     memory-1    = 2048
     disk_size-1 = 16
@@ -19,10 +21,11 @@ locals {
 
 # proxmox_vm_qemu: nc-<Region Name>-<VM Name>
 resource "proxmox_vm_qemu" "nc-ur-ubuntu" {
+    count       = local.replicas-0
     desc        = "Ubuntu 22.04 VM on Proxmox by Terraform"
     name        = "${var.vm_name}-ubuntu-${count.index}"
     target_node = var.target_node
-    vmid        = local.vmid-0 + count.index
+    vmid        = "${local.vmid-0 + count.index}"
     os_type     = local.os_type
     boot        = local.boot
     iso         = local.ubuntu-2204
@@ -45,17 +48,16 @@ resource "proxmox_vm_qemu" "nc-ur-ubuntu" {
     ciuser    = var.username
     sshkeys   = var.public_key
 
-    tags = {
-        Name = "tf-${var.target_node}"
-    }
+    tags = "tf-${var.target_node}"
 }
 
 # proxmox_vm_qemu: nc-<Region Name>-<VM Name>
 resource "proxmox_vm_qemu" "nc-ur-vyos" {
+    count       = local.replicas-1
     desc        = "Vyos 1.3.3 VM on Proxmox by Terraform"
     name        = "${var.vm_name}-vyos-${count.index}"
-    target_node = local.target_node
-    vmid        = local.vmid-1 + count.index
+    target_node = var.target_node
+    vmid        = "${local.vmid-1 + count.index}"
     os_type     = local.os_type
     boot        = local.boot
     iso         = local.vyos-133
@@ -77,4 +79,6 @@ resource "proxmox_vm_qemu" "nc-ur-vyos" {
     ipconfig0 = "ip=${var.ip_address_networkpart}${5 + count.index}/24,gw=${var.ip_address_networkpart}0"
     ciuser    = var.username
     sshkeys   = var.public_key
+
+    tags = "tf-${var.target_node}"
 }
