@@ -81,3 +81,45 @@ variable private_key {
     type = string
     default = ""
 }
+
+
+variable "ubuntu-user_data" {
+    description = "The user data to be used for cloud-init"
+    type = string
+    default = ""
+}
+
+
+variable "ubuntu-meta_data" {
+    description = "The meta data to be used for cloud-init"
+    type = string
+    default = ""
+}
+
+
+variable "ubuntu-netwrok_config" {
+    description = "The network configuration to be used for cloud-init"
+    type = string
+    default = ""
+}
+
+
+variable "vyos-user_data" {
+    description = "The user data to be used for cloud-init"
+    type = string
+    default = ""
+}
+
+
+variable "vyos-meta_data" {
+    description = "The meta data to be used for cloud-init"
+    type = string
+    default = ""
+}
+
+
+variable "vyos-netwrok_config" {
+    description = "The network configuration to be used for cloud-init"
+    type = string
+    default = ""
+}

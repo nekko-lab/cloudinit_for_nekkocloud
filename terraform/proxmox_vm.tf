@@ -1,24 +1,4 @@
 # Description: This file contains the terraform configuration for creating a new VM on the Proxmox server.
-# locals: Argument reference
-locals {
-    boot        = "order=virtio0"
-    os_type     = "cloud-init"
-
-    ubuntu-2204 = "local:iso/jammy-server-cloudimg-amd64.img"
-    vmid-0      = 2010
-    replicas-0  = 2
-    cores-0     = 2
-    memory-0    = 4096
-    disk_size-0 = 128
-
-    vyos-133    = "local:iso/vyos-1.3.3-amd64.iso"
-    vmid-1      = 1900
-    replicas-1  = 1
-    cores-1     = 2
-    memory-1    = 2048
-    disk_size-1 = 16
-}
-
 # proxmox_vm_qemu: nc-<Region Name>-<VM Name>
 resource "proxmox_vm_qemu" "nc-ur-ubuntu" {
     count       = local.replicas-0
