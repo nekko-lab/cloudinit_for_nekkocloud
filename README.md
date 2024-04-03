@@ -44,13 +44,13 @@ wget https://cloud-images.ubuntu.com/jammy/current/jammy-server-cloudimg-amd64.i
 - テンプレート用のVMを作成
 
 ```bash
-qm create 9000 --memory 2048 --net0 virtio,bridge=vmbr0
+qm create <VM ID> --memory 2048 --net0 virtio,bridge=vmbr0
 ```
 
 - localのstorageにISOファイルをインポート
 
 ```bash
-qm importdisk 9000 ubuntu-22.04-server-cloudimg-amd64.img local-lvm
+qm importdisk <VM ID> ubuntu-22.04-server-cloudimg-amd64.img local-lvm
 ```
 
 - ISOファイルを削除
@@ -60,21 +60,21 @@ rm -rf ubuntu-22.04-server-cloudimg-amd64.img
 ```
 
 - VMをセットアップ
-  
+
 ```bash
-qm set 9000 --scsi0 local-lvm:0,import-from=/root/jammy-server-cloudimg-amd64.img
-qm set 9000 --name ubuntu-22.04
-qm set 9000 --scsihw virtio-scsi-pci --virtio0 local-lvm:vm-9000-disk-0
-qm set 9000 --boot order=virtio0
-qm set 9000 --ide2 local-lvm:cloudinit
-qm set 9000 --nameserver 192.168.2.1
-# qm set 9100 --nameserver 192.168.0.1 --searchdomain example.com
+qm set <VM ID> --scsi0 local-lvm:0,import-from=/root/ubuntu-22.04-server-cloudimg-amd64.img
+qm set <VM ID> --name <VM Name>
+qm set <VM ID> --scsihw virtio-scsi-pci --virtio0 local-lvm:vm-<VM ID>-disk-0
+qm set <VM ID> --boot order=virtio0
+qm set <VM ID> --ide2 local-lvm:cloudinit
+qm set <VM ID> --nameserver 192.168.0.1
+# qm set <VM ID> --nameserver 192.168.0.1 --searchdomain example.com
 ```
 
 - VMテンプレートにコンバートする
 
 ```bash
-qm template 9000
+qm template <VM ID>
 ```
 
 ---
@@ -117,6 +117,83 @@ $ pvesh create /access/users/terraform-prov@pve/token/NekkoCloud --privsep 0
 ```
 
 ### TerraformでVMをデプロイ
+
+このリポジトリをクローンしていることが前提です。ま、さすがにもうやってくれてるよね？
+
+- `cd .\terraform`でTerraformファイルが保存されたディレクトリへ移動
+- `terraform init`を実行して初期化
+
+```bash
+$ terraform init
+
+Initializing the backend...
+
+Initializing provider plugins...
+- Reusing previous version of telmate/proxmox from the dependency lock file
+- Using previously-installed telmate/proxmox v2.9.11
+
+Terraform has been successfully initialized!
+
+You may now begin working with Terraform. Try running "terraform plan" to see
+any changes that are required for your infrastructure. All Terraform commands
+should now work.
+
+If you ever set or change modules or backend configuration for Terraform,
+rerun this command to reinitialize your working directory. If you forget, other
+commands will detect it and remind you to do so if necessary.
+```
+<details>
+<summary>各種VMの設定項目を記述する</summary>
+
+  - `backend.tf`の`local`にあるVMリソースの項目を適宜設定する
+    - `vm_name-0`: Cloud-Initで事前に作成したVMテンプレートの名前
+    - `vmid-0`: Proxmox VMID
+    - `clone-0`: Proxmoxクラスター上にデプロイされるVMの数
+    - `cores-0`: VMのコア数（デフォルトは1）
+    - `memory-0`: VMのメモリ数（デフォルトは2048MB）
+    - `disk_size-0`: VMのストレージ（デフォルトは2252MB）
+  - その他秘匿性の高い情報は`terraform.tfvars`を各自作成し、`terraform.tfvars.template`を参考に内容を記述すること
+
+</details>
+
+- `terraform plan`を実行してtfファイルに問題が無いか確認を行ってもらう
+- `terraform apply`を実行してデプロイ
+  `yes`と入力して開始！
+
+```bash
+$ terraform apply
+Do you want to perform these actions?
+  Terraform will perform the actions described above.
+  Only 'yes' will be accepted to approve.
+
+  Enter a value: 
+
+~~~
+
+Apply complete! Resources: 1 added, 0 changed, 0 destroyed.
+```
+
+- VMを削除する場合は`terraform destroy`を実行する
+  `yes`と入力して開始！
+
+```bash
+$ terraform destroy
+
+~~~
+
+Plan: 0 to add, 0 to change, 1 to destroy.
+
+Do you really want to destroy all resources?
+  Terraform will destroy all your managed infrastructure, as shown above.
+  There is no undo. Only 'yes' will be accepted to confirm.
+
+  Enter a value:
+
+~~~
+
+Destroy complete! Resources: 2 destroyed.
+```
+
 ---
 
 ## 参考文献

@@ -4,9 +4,10 @@
 *.pdf
 *.exe
 .terraform.lock.hcl
-.terraform.tfstate.lock.info
+*.tfstate.lock.info
+terraform.tfstate.backup
+*.tfstate
 *.tfvars
 .terraform
-*.tfstate
 terraform-plugin-proxmox.log
 cloud-config.yaml

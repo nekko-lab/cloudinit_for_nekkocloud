@@ -1,15 +1,15 @@
 # Description: This file contains the terraform configuration for creating a new VM on the Proxmox server.
 # proxmox_vm_qemu: nc-<Region Name>-<VM Name>
 resource "proxmox_vm_qemu" "nc-ur-ubuntu" {
-    count       = local.replicas-0
+    count       = local.clone-0
     desc        = "Ubuntu 22.04 VM on Proxmox by Terraform"
     name        = "${var.vm_name}-ubuntu-${count.index}"
     target_node = var.target_node
     vmid        = "${local.vmid-0 + count.index}"
     os_type     = local.os_type
     boot        = local.boot
-    clone       = local.ubuntu-2204
-    # iso         = local.ubuntu-2204
+    clone       = local.vm_name-0
+    # iso         = local.vm_name-0
     cores       = local.cores-0
     memory      = local.memory-0
 
@@ -35,14 +35,14 @@ resource "proxmox_vm_qemu" "nc-ur-ubuntu" {
 
 # proxmox_vm_qemu: nc-<Region Name>-<VM Name>
 # resource "proxmox_vm_qemu" "nc-ur-vyos" {
-#     count       = local.replicas-1
+#     count       = local.clone-1
 #     desc        = "Vyos 1.3.3 VM on Proxmox by Terraform"
 #     name        = "${var.vm_name}-vyos-${count.index}"
 #     target_node = var.target_node
 #     vmid        = "${local.vmid-1 + count.index}"
 #     os_type     = local.os_type
 #     boot        = local.boot
-#     iso         = local.vyos-133
+#     iso         = local.vm_name-1
 #     cores       = local.cores-1
 #     memory      = local.memory-1
 

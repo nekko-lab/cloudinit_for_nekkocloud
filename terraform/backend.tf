@@ -9,9 +9,9 @@ locals {
 # VM config: Ubuntu 22.04
 locals {
     # ubuntu-2204 = "local:iso/ubuntu-22.04-server-cloudimg-amd64.img"
-    ubuntu-2204 = "ubuntu-22.04"
+    vm_name-0   = "ubuntu-22.04"
     vmid-0      = 2010
-    replicas-0  = 10
+    clone-0     = 2
     cores-0     = 2
     memory-0    = 4096
     disk_size-0 = 128
@@ -19,9 +19,9 @@ locals {
 
 # VM config: Vyos 1.3.3
 locals {
-    vyos-133    = "local:iso/vyos-1.3.3-amd64.iso"
+    vm_name-1   = "local:iso/vyos-1.3.3-amd64.iso"
     vmid-1      = 1900
-    replicas-1  = 1
+    clone-1     = 1
     cores-1     = 2
     memory-1    = 2048
     disk_size-1 = 16
