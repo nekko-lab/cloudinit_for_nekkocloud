@@ -3,12 +3,13 @@
 locals {
     boot    = "order=virtio0"
     os_type = "cloud-init"
-    iso_storage_pool = "cephfs"
+    iso_storage_pool = "local-lvm" #cephfs
 }
 
 # VM config: Ubuntu 22.04
 locals {
-    ubuntu-2204 = "local:iso/jammy-server-cloudimg-amd64.img"
+    # ubuntu-2204 = "local:iso/ubuntu-22.04-server-cloudimg-amd64.img"
+    ubuntu-2204 = "ubuntu-22.04"
     vmid-0      = 2010
     replicas-0  = 2
     cores-0     = 2
@@ -39,10 +40,10 @@ terraform {
 # provider: Proxmox
 provider "proxmox" {
     pm_api_url          = var.PM_PROV_URL
-    pm_user             = var.PM_USER
-    pm_password         = var.PM_PASS
-    # pm_api_token_id     = var.PM_API_TOKEN_ID
-    # pm_api_token_secret = varPM_API_TOKEN_SECRET
+    # pm_user             = var.PM_USER
+    # pm_password         = var.PM_PASS
+    pm_api_token_id     = var.PM_API_TOKEN_ID
+    pm_api_token_secret = var.PM_API_TOKEN_SECRET
     pm_tls_insecure     = true
     pm_debug            = true
     pm_log_enable       = true
@@ -52,3 +53,4 @@ provider "proxmox" {
         # _capturelog = ""
     }
 }
+

@@ -9,3 +9,4 @@
 .terraform
 *.tfstate
 terraform-plugin-proxmox.log
+cloud-config.yaml

@@ -38,7 +38,7 @@ ProxmoxでCloud-Initを使用し、各種VMのデプロイを自動化する。
   今回使用したイメージは[Ubuntu server Cloudimg 22.04LTS](https://cloud-images.ubuntu.com/)
   
 ```bash
-wget https://cloud-images.ubuntu.com/focal/current/focal-server-cloudimg-amd64.img
+wget https://cloud-images.ubuntu.com/jammy/current/jammy-server-cloudimg-amd64.img -O ubuntu-22.04-server-cloudimg-amd64.img
 ```
 
 - テンプレート用のVMを作成
@@ -47,10 +47,34 @@ wget https://cloud-images.ubuntu.com/focal/current/focal-server-cloudimg-amd64.i
 qm create 9000 --memory 2048 --net0 virtio,bridge=vmbr0
 ```
 
-- ダウンロードしたイメージをlocal-lvmにセット
+- localのstorageにISOファイルをインポート
+
+```bash
+qm importdisk 9000 ubuntu-22.04-server-cloudimg-amd64.img local-lvm
+```
+
+- ISOファイルを削除
+
+```bash
+rm -rf ubuntu-22.04-server-cloudimg-amd64.img
+```
+
+- VMをセットアップ
   
 ```bash
 qm set 9000 --scsi0 local-lvm:0,import-from=/root/jammy-server-cloudimg-amd64.img
+qm set 9000 --name ubuntu-22.04
+qm set 9000 --scsihw virtio-scsi-pci --virtio0 local-lvm:vm-9000-disk-0
+qm set 9000 --boot order=virtio0
+qm set 9000 --ide2 local-lvm:cloudinit
+qm set 9000 --nameserver 192.168.2.1
+# qm set 9100 --nameserver 192.168.0.1 --searchdomain example.com
+```
+
+- VMテンプレートにコンバートする
+
+```bash
+qm template 9000
 ```
 
 ---
@@ -76,6 +100,22 @@ pveum user add terraform-prov@pve --password <password>
 ```bash
 pveum aclmod / -user terraform-prov@pve -role TerraformProvider
 ```
+
+- `pvesh create /access/users/terraform-prov@pve/token/NekkoCloud --privsep 0`
+
+```bash
+$ pvesh create /access/users/terraform-prov@pve/token/NekkoCloud --privsep 0
+┌──────────────┬──────────────────────────────────────┐
+│ key          │ value                                │
+╞══════════════╪══════════════════════════════════════╡
+│ full-tokenid │ terraform-prov@pve!NekkoCloud        │
+├──────────────┼──────────────────────────────────────┤
+│ info         │ {"privsep":"0"}                      │
+├──────────────┼──────────────────────────────────────┤
+│ value        │ xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx │
+└──────────────┴──────────────────────────────────────┘
+```
+
 
 ---
 
