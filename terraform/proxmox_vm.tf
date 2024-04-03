@@ -25,9 +25,10 @@ resource "proxmox_vm_qemu" "nc-ur-ubuntu" {
         firewall = false
     }
 
-    ipconfig0 = "ip=${var.ip_address_networkpart}${10 + count.index}/24,gw=${var.ip_address_networkpart}0"
-    ciuser    = var.username
-    sshkeys   = var.public_key
+    ipconfig0  = "ip=${var.ip_address_networkpart}${10 + count.index}/24,gw=${var.ip_address_networkpart}0"
+    ciuser     = var.username
+    cipassword = var.password
+    sshkeys    = var.public_key
 
     tags = "tf-${var.target_node}"
 }
@@ -57,9 +58,10 @@ resource "proxmox_vm_qemu" "nc-ur-ubuntu" {
 #         firewall = false
 #     }
 
-#     ipconfig0 = "ip=${var.ip_address_networkpart}${5 + count.index}/24,gw=${var.ip_address_networkpart}0"
-#     ciuser    = var.username
-#     sshkeys   = var.public_key
+#     ipconfig0  = "ip=${var.ip_address_networkpart}${5 + count.index}/24,gw=${var.ip_address_networkpart}0"
+#     ciuser     = var.username
+#     cipassword = var.password
+#     sshkeys    = var.public_key
 
 #     tags = "tf-${var.target_node}"
 # }

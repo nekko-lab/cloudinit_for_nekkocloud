@@ -11,7 +11,7 @@ locals {
     # ubuntu-2204 = "local:iso/ubuntu-22.04-server-cloudimg-amd64.img"
     ubuntu-2204 = "ubuntu-22.04"
     vmid-0      = 2010
-    replicas-0  = 2
+    replicas-0  = 10
     cores-0     = 2
     memory-0    = 4096
     disk_size-0 = 128

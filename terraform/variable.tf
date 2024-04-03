@@ -55,6 +55,13 @@ variable username {
 }
 
 
+variable password {
+    description = "The password to assign to the VM"
+    type = string
+    default = ""
+}
+
+
 variable target_node {
     description = "The Proxmox node to deploy the VM"
     type = string

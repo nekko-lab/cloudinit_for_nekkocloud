@@ -79,7 +79,7 @@ qm template 9000
 
 ---
 
-## Proxmox と Terraformの場合
+## ProxmoxとTerraformの場合
 
 ### Proxmoxクラスタの設定
 
@@ -116,7 +116,7 @@ $ pvesh create /access/users/terraform-prov@pve/token/NekkoCloud --privsep 0
 └──────────────┴──────────────────────────────────────┘
 ```
 
-
+### TerraformでVMをデプロイ
 ---
 
 ## 参考文献
