@@ -196,6 +196,10 @@ Destroy complete! Resources: 2 destroyed.
 
 ---
 
+## 尾張に
+
+---
+
 ## 参考文献
 
 1. [cloud-initを使ったLinux OSの初期設定]

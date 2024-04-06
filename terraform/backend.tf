@@ -11,10 +11,10 @@ locals {
     # ubuntu-2204 = "local:iso/ubuntu-22.04-server-cloudimg-amd64.img"
     vm_name-0   = "ubuntu-22.04"
     vmid-0      = 2010
-    clone-0     = 2
+    clone-0     = 1
     cores-0     = 2
     memory-0    = 4096
-    disk_size-0 = 128
+    disk_size-0 = 32
 }
 
 # VM config: Vyos 1.3.3
@@ -53,4 +53,3 @@ provider "proxmox" {
         # _capturelog = ""
     }
 }
-
