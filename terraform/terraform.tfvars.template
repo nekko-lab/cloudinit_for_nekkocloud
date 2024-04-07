@@ -6,18 +6,18 @@ PM_API_TOKEN_ID     = ""
 PM_API_TOKEN_SECRET = ""
 
 # CLOUD-INIT CONFIGURATION
-ubuntu-user_data      = <<EOF
+ubuntu_user_data      = <<EOF
 #cloud-config
 EOF
 
-ubuntu-meta_data      = <<EOF
+ubuntu_meta_data      = <<EOF
 {
     instance_id    = sha1(var.vm_name)
     local-hostname = var.vm_name
 }
 EOF
 
-ubuntu-netwrok_config = <<EOF
+ubuntu_network_config = <<EOF
 {
     version = 1
     config = [{
@@ -34,18 +34,18 @@ ubuntu-netwrok_config = <<EOF
 EOF
 
 # CLOUD-INIT CONFIGURATION
-vyos-user_data        = <<EOF
+vyos_user_data        = <<EOF
 #cloud-config
 EOF
 
-vyos-meta_data        = <<EOF
+vyos_meta_data        = <<EOF
 {
     instance_id    = sha1(var.vm_name)
     local-hostname = var.vm_name
 }
 EOF
 
-vyos-netwrok_config   = <<EOF
+vyos_network_config   = <<EOF
 {
     version = 1
     config = [{

@@ -7,16 +7,37 @@ resource "proxmox_vm_qemu" "nc-ur-ubuntu" {
     target_node = var.target_node
     vmid        = "${local.vmid-0 + count.index}"
     os_type     = local.os_type
-    boot        = local.boot
-    clone       = local.vm_name-0
-    # iso         = local.vm_name-0
     cores       = local.cores-0
     memory      = local.memory-0
 
+    # boot        = local.boot
+    # pxe         = false
+    # clone       = local.vm_name-0
+    # iso         = local.vm_name-0
+    
+    boot = "scsi0;net0"
+    pxe = true
+    agent = 0
+
+    # disks {
+    #     scsi {
+    #         scsi0 {
+    #             disk {
+    #                 media   = "cdrom"
+    #                 storage = local.iso_storage_pool
+    #                 volume  = 
+    #                 size    = proxmox_cloud_init_disk.nc-ur-ubuntu.size
+    #             }
+    #         }
+    #     }
+    # }
+
     disk {
-        storage = "local-lvm"
-        type    = "virtio"
-        size    = "${local.disk_size-0}G"
+        type    = "scsi"
+        media   = "cdrom"
+        storage = local.iso_storage_pool
+        volume  = proxmox_cloud_init_disk.nc-ur-ubuntu.id
+        size    = proxmox_cloud_init_disk.nc-ur-ubuntu.size
     }
 
     network {
