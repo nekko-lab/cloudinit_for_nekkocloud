@@ -79,7 +79,21 @@ qm template <VM ID>
 
 ---
 
-## ProxmoxとTerraformの場合
+## Netbird覚え書き
+
+### Netbirdのインストール
+
+### Netbirdの接続方法
+
+- `netbird service install`を実行してnetbirdをインストール
+- `netbird service start`を実行してNetbird deamonを起動
+- `netbird login`を実行して登録したVPNにログイン
+- `netbird up`を実行してnetbirdのネットワークに参加
+- `netbird status`を実行してステータスが`Connected`になっていればOK
+
+---
+
+## Terraformを使ってProxmoxのcloud-initから自動デプロイ
 
 ### Proxmoxクラスタの設定
 
