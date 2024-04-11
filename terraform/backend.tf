@@ -19,7 +19,8 @@ locals {
 
 # VM config: Vyos 1.3.3
 locals {
-    vm_name-1   = "local:iso/vyos-1.3.3-amd64.iso"
+    # vm_name-1   = "local:iso/vyos-1.3.3-amd64.iso"
+    vm_name-1   = "vyos-1.3.3"
     vmid-1      = 1900
     clone-1     = 1
     cores-1     = 2
@@ -31,8 +32,8 @@ locals {
 terraform {
     required_providers {
         proxmox = {
-            source = "TheGameProfi/proxmox"
-            version = "2.10.0"
+        source = "Telmate/proxmox"
+        version = "3.0.1-rc1"
         }
     }
 }
