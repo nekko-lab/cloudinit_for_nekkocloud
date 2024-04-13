@@ -53,12 +53,6 @@ qm create <VM ID> --memory 2048 --net0 virtio,bridge=vmbr0
 qm importdisk <VM ID> ubuntu-22.04-server-cloudimg-amd64.img local-lvm
 ```
 
-- ISOファイルを削除
-
-```bash
-rm -rf ubuntu-22.04-server-cloudimg-amd64.img
-```
-
 - VMをセットアップ
 
 ```bash
@@ -115,7 +109,7 @@ pveum user add terraform-prov@pve --password <password>
 pveum aclmod / -user terraform-prov@pve -role TerraformProvider
 ```
 
-- `pvesh create /access/users/terraform-prov@pve/token/NekkoCloud --privsep 0`
+- `pvesh create /access/users/terraform-prov@pve/token/NekkoCloud --privsep 0`を実行してトークンを発行
 
 ```bash
 $ pvesh create /access/users/terraform-prov@pve/token/NekkoCloud --privsep 0

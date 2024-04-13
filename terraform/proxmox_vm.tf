@@ -3,56 +3,86 @@
 resource "proxmox_vm_qemu" "nc-ur-ubuntu" {
     count       = local.clone-0
     desc        = "Ubuntu 22.04 VM on Proxmox by Terraform"
+
     name        = "${var.vm_name}-ubuntu-${count.index}"
     target_node = var.target_node
     vmid        = "${local.vmid-0 + count.index}"
     os_type     = local.os_type
+    boot        = local.boot
+    clone       = local.ci_name-0
+    cpu         = "host"
     cores       = local.cores-0
+    sockets     = 1
     memory      = local.memory-0
 
-    # boot        = local.boot
-    # pxe         = false
-    # clone       = local.vm_name-0
-    # iso         = local.vm_name-0
-    
-    boot = "scsi0;net0"
-    pxe = true
-    agent = 0
-
-    # disks {
-    #     scsi {
-    #         scsi0 {
-    #             disk {
-    #                 media   = "cdrom"
-    #                 storage = local.iso_storage_pool
-    #                 volume  = 
-    #                 size    = proxmox_cloud_init_disk.nc-ur-ubuntu.size
-    #             }
-    #         }
-    #     }
-    # }
-
-    disk {
-        type    = "scsi"
-        media   = "cdrom"
-        storage = local.iso_storage_pool
-        volume  = proxmox_cloud_init_disk.nc-ur-ubuntu.id
-        size    = proxmox_cloud_init_disk.nc-ur-ubuntu.size
+    disks {
+        virtio {
+            virtio0 {
+                disk {
+                    storage      = local.storage_pool
+                    size         = local.disk_size-0
+                }
+            }
+        }
     }
 
     network {
-        model    = "virtio"
+        model    = local.type
         bridge   = "vmbr0"
         firewall = false
     }
 
-    ipconfig0  = "ip=${var.ip_address_networkpart}${10 + count.index}/24,gw=${var.ip_address_networkpart}0"
+    ipconfig0  = "ip=${var.ip_address_networkpart}${local.network_num + count.index}/24,gw=${var.ip_address_networkpart}0"
     ciuser     = var.username
     cipassword = var.password
     sshkeys    = var.public_key
 
     tags = "tf-${var.target_node}"
 }
+
+# proxmox_cloud_init_disk: nc-<Region Name>-<VM Name>
+#resource "proxmox_cloud_init_disk" "nc-ur-ubuntu" {
+#    name     = "${var.vm_name}-ubuntu"
+#    pve_node = var.target_node
+#    storage  = local.storage_pool#
+
+#    meta_data      = yamlencode({
+#        instance_id    = sha1(var.vm_name)
+#        local-hostname = var.vm_name
+#    })
+
+#    user_data      = <<EOF
+#timezone: Asia/Tokyo
+#locale: ja_JP.utf8
+#package_update: true
+#package_upgrade: true
+#runcmd:
+#- apt-get -y install inetutils-ping
+#- apt-get -y install net-tools
+#- apt-get -y install nc
+#power_state:
+#delay: "+10"
+#mode: reboot
+#message: Rebooting ...
+#timeout: 30
+#EOF
+
+#    network_config = yamlencode({
+#    version = 1
+#    config = [{
+#        type = "physical"
+#        name = "eth0"
+#        subnets = [{
+#            type            = "static"
+#            address         = "172.19.0.100/24"
+#            gateway         = "172.19.0.1"
+#            dns_nameservers = ["172.16.0.1", "1.1.1.1", "8.8.8.8"]
+#            }]
+#        }]
+#    })
+#}
+
+#=============================================================#
 
 # proxmox_vm_qemu: nc-<Region Name>-<VM Name>
 # resource "proxmox_vm_qemu" "nc-ur-vyos" {
@@ -63,7 +93,7 @@ resource "proxmox_vm_qemu" "nc-ur-ubuntu" {
 #     vmid        = "${local.vmid-1 + count.index}"
 #     os_type     = local.os_type
 #     boot        = local.boot
-#     iso         = local.vm_name-1
+#     iso         = local.ci_name-1
 #     cores       = local.cores-1
 #     memory      = local.memory-1
 

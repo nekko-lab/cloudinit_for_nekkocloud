@@ -15,4 +15,3 @@ terraform.tfstate.backup
 *.tfvars
 .terraform
 terraform-plugin-proxmox.log
-cloud-init.yaml
