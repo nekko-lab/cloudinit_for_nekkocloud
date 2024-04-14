@@ -135,10 +135,11 @@ $ pvesh create /access/users/terraform-prov@pve/token/NekkoCloud --privsep 0
 $ terraform init
 
 Initializing the backend...
+Initializing modules...
 
 Initializing provider plugins...
 - Reusing previous version of telmate/proxmox from the dependency lock file
-- Using previously-installed telmate/proxmox v2.9.11
+- Using previously-installed telmate/proxmox v3.0.1-rc1
 
 Terraform has been successfully initialized!
 
