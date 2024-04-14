@@ -1,44 +1,73 @@
 # Description: This file contains the terraform configuration for creating a new VM on the Proxmox server.
-# proxmox_vm_qemu: nc-<Region Name>-<VM Name>
-resource "proxmox_vm_qemu" "nc-ur-ubuntu" {
-    count       = local.clone-0
-    desc        = "Ubuntu 22.04 VM on Proxmox by Terraform"
+# module: proxmox_vm_qemu
+module "proxmox_vm_ubuntu" {
+    source      = "./modules"
+    description = "Ubuntu 22.04 VM on Proxmox by Terraform"
+    clonenum    = local.clone-0
 
-    name        = "${var.vm_name}-ubuntu-${count.index}"
+    vm_name     = "${var.vm_name}"
     target_node = var.target_node
-    vmid        = "${local.vmid-0 + count.index}"
+    vmid        = "${local.vmid-0}"
     os_type     = local.os_type
     boot        = local.boot
-    clone       = local.ci_name-0
-    cpu         = "host"
-    cores       = local.cores-0
-    sockets     = 1
+    ci_clone    = local.ci_name-0
+    cputype     = "host"
+    core        = local.cores-0
+    socket      = local.socket-0
     memory      = local.memory-0
 
-    disks {
-        virtio {
-            virtio0 {
-                disk {
-                    storage      = local.storage_pool
-                    size         = local.disk_size-0
-                }
-            }
-        }
-    }
-
-    network {
-        model    = local.type
-        bridge   = "vmbr0"
-        firewall = false
-    }
-
-    ipconfig0  = "ip=${var.ip_address_networkpart}${local.network_num + count.index}/24,gw=${var.ip_address_networkpart}0"
-    ciuser     = var.username
-    cipassword = var.password
-    sshkeys    = var.public_key
-
-    tags = "tf-${var.target_node}"
+    storage_pool = local.storage_pool
+    disk_size    = local.disk_size-0
+    
+    type                   = local.type
+    ip_address_networkpart = var.ip_address_networkpart
+    username               = var.username
+    password               = var.password
+    qemu_agent             = local.qemu_agent
+    public_key             = var.public_key
+    network_num            = local.network_num-0
 }
+
+# proxmox_vm_qemu: nc-<Region Name>-<VM Name>
+# resource "proxmox_vm_qemu" "nc-ur-ubuntu" {
+#     count       = local.clone-0
+#     desc        = "Ubuntu 22.04 VM on Proxmox by Terraform"
+
+#     name        = "${var.vm_name}-ubuntu-${count.index}"
+#     target_node = var.target_node
+#     vmid        = "${local.vmid-0 + count.index}"
+#     os_type     = local.os_type
+#     boot        = local.boot
+#     clone       = local.ci_name-0
+#     cpu         = "host"
+#     cores       = local.cores-0
+#     sockets     = 1
+#     memory      = local.memory-0
+
+#     disks {
+#         virtio {
+#             virtio0 {
+#                 disk {
+#                     storage      = local.storage_pool
+#                     size         = local.disk_size-0
+#                 }
+#             }
+#         }
+#     }
+
+#     network {
+#         model    = local.type
+#         bridge   = "vmbr0"
+#         firewall = false
+#     }
+
+#     ipconfig0  = "ip=${var.ip_address_networkpart}${local.network_num + count.index}/24,gw=${var.ip_address_networkpart}0"
+#     ciuser     = var.username
+#     cipassword = var.password
+#     sshkeys    = var.public_key
+
+#     tags = "tf-${var.target_node}"
+# }
 
 # proxmox_cloud_init_disk: nc-<Region Name>-<VM Name>
 #resource "proxmox_cloud_init_disk" "nc-ur-ubuntu" {

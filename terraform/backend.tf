@@ -9,13 +9,15 @@ locals {
 
 # VM config: Ubuntu 22.04
 locals {
-    ci_name-0   = "nc-vm-ubuntu22.04"
-    vmid-0      = 2010
-    clone-0     = 1
-    cores-0     = 2
-    memory-0    = 4096
-    disk_size-0 = 32
-    network_num = 50
+    ci_name-0     = "nc-vm-ubuntu22.04"
+    vmid-0        = 2010
+    clone-0       = 2
+    cores-0       = 2
+    memory-0      = 4096
+    disk_size-0   = 32
+    socket-0      = 1
+    qemu_agent    = 1
+    network_num-0 = 50
 }
 
 # VM config: Vyos 1.3.3
@@ -28,7 +30,7 @@ locals {
     disk_size-1 = 16
 }
 
-# provider: Proxmox
+# provider: Telmate Proxmox
 terraform {
     required_providers {
         proxmox = {
