@@ -1,29 +1,54 @@
 # Description: This file contains the terraform configuration for creating a new VM on the Proxmox server.
-# module: proxmox_vm_qemu
-module "proxmox_vm_ubuntu" {
-    source      = "./modules"
-    description = "Ubuntu 22.04 VM on Proxmox by Terraform"
-    clonenum    = local.clone-0
+# proxmox_vm_qemu: nc-<Region Name>
+resource "proxmox_vm_qemu" "nc-vm-1" {
+    count = local.clone_num
+    desc  = "${local.description}"
 
-    vm_name     = "${var.vm_name}"
-    target_node = var.target_node
-    vmid        = "${local.vmid-0}"
+    name        = "${var.vm_name}-${local.os_name}-${count.index}"
+    target_node = local.target_node
+    vmid        = local.vmid + count.index
     os_type     = local.os_type
     boot        = local.boot
-    ci_clone    = local.ci_name-0
-    cputype     = "host"
-    core        = local.cores-0
-    socket      = local.socket-0
-    memory      = local.memory-0
+    onboot      = local.onboot
+    bootdisk    = local.bootdisk
+    clone       = local.ci_name
+    cpu         = local.cputype
+    cores       = local.cores
+    sockets     = local.sockets
+    memory      = local.memory
+    scsihw      = local.scsi_ctl_type
 
-    storage_pool = local.storage_pool
-    disk_size    = local.disk_size-0
-    
-    type                   = local.type
-    ip_address_networkpart = var.ip_address_networkpart
-    username               = var.username
-    password               = var.password
-    qemu_agent             = local.qemu_agent
-    public_key             = var.public_key
-    network_num            = local.network_num-0
+    disks {
+        virtio {
+            virtio0 {
+                disk {
+                    storage = local.storage_pool
+                    size    = local.disk_size
+                }
+            }
+        }
+
+        scsi {
+            scsi0 {
+                disk {
+                    storage = local.storage_pool
+                    size    = local.disk_size
+                }
+            }
+        }
+    }
+
+    network {
+        model    = local.type
+        bridge   = "vmbr0"
+        firewall = false
+    }
+
+    ipconfig0  = "ip=${local.ip_add_net}${local.network_num + count.index}/24,gw=${local.ip_add_net}0"
+    ciuser     = "${var.username}"
+    cipassword = "${var.password}"
+    sshkeys    = var.public_key
+    agent      = local.qemu_agent
+
+    tags = "tf-${local.target_node}"
 }

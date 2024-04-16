@@ -1,11 +1,4 @@
 # PROXMOX PROVIDER CONFIGURATION
-variable "PM_PROV_URL" {
-    description = "The Proxmox Provider URL"
-    type = string
-    default = ""
-}
-
-
 variable "PM_USER" {
     description = "The Proxmox user"
     type = string
@@ -34,10 +27,73 @@ variable "PM_API_TOKEN_SECRET" {
 }
 
 
+variable "PM_TLS_INSECURE" {
+    description = "The Proxmox TLS insecure flag"
+    type = bool
+    default = "true"
+}
+
+
+variable "PM_DEBUG" {
+    description = "The Proxmox debug flag"
+    type = bool
+    default = "true"
+}
+
+
+variable "PM_LOG_ENABLE" {
+    description = "The Proxmox log enable flag"
+    type = bool
+    default = "true"
+}
+
+
+variable "PM_LOG_LEVEL" {
+    description = "The Proxmox log level"
+    type = string
+    default = "debug"
+}
+
+
 variable "PM_LOG_FILE" {
     description = "The Proxmox log file"
     type = string
     default = "terraform-plugin-proxmox.log"
+}
+
+
+variable "PM_HOST_NUM" {
+    description = "The Proxmox VE host number"
+    type = number
+    default = 255
+}
+
+
+variable "NC_REGION" {
+    description = "The NekkoCloud region"
+    type = string
+    default = ""
+}
+
+
+variable "NC_MK_IP" {
+    description = "The NekkoCloud MK IP"
+    type = string
+    default = ""
+}
+
+
+variable "NC_UR_IP" {
+    description = "The NekkoCloud UR IP"
+    type = string
+    default = ""
+}
+
+
+variable "NC_TU_IP" {
+    description = "The NekkoCloud TU IP"
+    type = string
+    default = ""
 }
 
 # VM CONFIGURATION
@@ -59,20 +115,6 @@ variable password {
     description = "The password to assign to the VM"
     type = string
     default = ""
-}
-
-
-variable target_node {
-    description = "The Proxmox node to deploy the VM"
-    type = string
-    default = ""
-}
-
-
-variable ip_address_networkpart {
-    description = "The number of cores to assign to the VM"
-    type = string
-    default = "192.168.0."
 }
 
 

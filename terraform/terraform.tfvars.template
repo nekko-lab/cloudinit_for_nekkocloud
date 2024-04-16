@@ -1,18 +1,24 @@
 # PROXMOX PROVIDER CONFIGURATION
-PM_PROV_URL         = "https://xxx.xxx.xxx.xxx:8006/api2/json"
-# PM_USER             = ""
-# PM_PASS             = ""
+NC_REGION           = ""    # Set Proxmox region
 PM_API_TOKEN_ID     = ""
 PM_API_TOKEN_SECRET = ""
+# PM_USER             = ""
+# PM_PASS             = ""
+PM_TLS_INSECURE     = "true"
+PM_DEBUG            = "true"
+PM_LOG_ENABLE       = "true"
+PM_LOG_LEVEL        = "debug"
+PM_HOST_NUM         = XXX
+NC_MK_IP            = "XXX.XXX.XXX."
+NC_UR_IP            = "XXX.XXX.XXX."
+NC_TU_IP            = "XXX.XXX.XXX."
 
 # VM CONFIGURATION
-vm_name                = ""
-username               = ""
-password               = ""
-target_node            = ""
-ip_address_networkpart = "xxx.xxx.x."
-public_key             = ""
-private_key            = <<EOF
+vm_name     = "nc-vm"
+username    = ""
+password    = ""
+public_key  = ""
+private_key = <<EOF
 -----BEGIN OPENSSH PRIVATE KEY-----
 -----END OPENSSH PRIVATE KEY-----
 EOF

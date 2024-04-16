@@ -203,6 +203,8 @@ Do you really want to destroy all resources?
 Destroy complete! Resources: 2 destroyed.
 ```
 
+***VMにログインできません！！！***
+
 ---
 
 ## 尾張に
