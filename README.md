@@ -128,7 +128,7 @@ $ pvesh create /access/users/terraform-prov@pve/token/NekkoCloud --privsep 0
 
 このリポジトリをクローンしていることが前提です。ま、さすがにもうやってくれてるよね？
 
-- `cd .\terraform`でTerraformファイルが保存されたディレクトリへ移動
+- `cd .\terraform`でtfファイルが保存されたディレクトリへ移動
 - `terraform init`を実行して初期化
 
 ```bash
