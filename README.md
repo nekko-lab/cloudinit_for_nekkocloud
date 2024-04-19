@@ -1,4 +1,4 @@
-# Terraform × Cloud-InitでVMセットアップをいい感じにする vol.1
+# Terraform × Cloud-InitでVMのセットアップをいい感じにする vol.1
 
 ---
 
@@ -7,8 +7,8 @@
 ### TL;DR
 
 - cloud initはLinuxの初期設定を簡単にするもの
-- Proxmox VEをTerraformで楽々珍々にする方法をメモしたもの
-- Terraform大好き😍
+- Proxmox VEをTerraformで楽ちんにする方法をメモしたもの
+- Terraform大好き😍chu❤️‍🔥
 
 ### [cloud init][cloud-initを使ったLinux OSの初期設定]とは
 
@@ -18,7 +18,7 @@
 
 > Terraform は、クラウドおよびオンプレミスのリソースを安全かつ効率的に構築、変更、バージョン管理できるコード ツールとしてのインフラストラクチャです。
 
-Application Programming Interfaces (APIs)が使えるほとんどのプラットフォームでTerraformは使用可能だとか。すげー🙌
+Application Programming Interfaces (APIs)が使えるほとんどのプラットフォームでTerraformは使用可能なんだとか。すげー🙌
 
 ### Proxmox VEのVM作成を自動化するメリット
 
@@ -216,7 +216,7 @@ Destroy complete! Resources: 2 destroyed.
 
 ---
 
-## 尾張に
+## おわりに
 
 ここまでお疲れ様でした！今日からあなたもNekkoCloudのリージョン管理者の仲間入りです。今後の展望としては、Cloud-Initのテンプレートもワンクリックで作成できるようにしたいところ。今後の開発にご期待ください。
 
