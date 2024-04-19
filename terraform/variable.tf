@@ -72,7 +72,7 @@ variable "PM_HOST_NUM" {
 variable "NC_REGION" {
     description = "The NekkoCloud region"
     type = string
-    default = ""
+    default = "none"
 }
 
 

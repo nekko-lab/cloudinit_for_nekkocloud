@@ -2,30 +2,29 @@
 # locals: Argument reference
 locals {
     target_node   = "${var.NC_REGION}-proxmox-1"
-    boot          = "order=virtio0;ide2"
+    boot          = "order=virtio0"
     onboot        = true
     bootdisk      = "scsi0"
     os_type       = "cloud-init"
     cputype       = "host"
-    disk_type     = "scsi"
     scsi_ctl_type = "virtio-scsi-pci"
     type          = "virtio"
-    storage_pool  = "local-lvm" # cephfs local-nvme
-    qemu_agent    = 0
+    storage_pool  = "local-lvm" # cephfs local-nvme local-lvm
+    qemu_agent    = 1
 }
 
-# VM config: Ubuntu 22.04
+# locals: VM config Ubuntu 22.04 nc-vm-ubuntu22.04
 locals {
     os_name     = "ubuntu"
     ci_name     = "nc-vm-ubuntu22.04"
     description = "Ubuntu 22.04 VM on Proxmox by Terraform"
     vmid        = 2010
-    clone_num   = 2
+    clone_num   = 1
     cores       = 2
     memory      = 4096
     disk_size   = 32
     sockets     = 1
-    network_num = 50
+    network_num = 80
     ip_add_net  = var.NC_REGION == "mk" ? var.NC_MK_IP : var.NC_REGION == "ur" ? var.NC_UR_IP : var.NC_REGION == "tu" ? var.NC_TU_IP : var.NC_MK_IP
 }
 

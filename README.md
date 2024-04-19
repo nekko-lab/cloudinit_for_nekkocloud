@@ -1,4 +1,4 @@
-# Terraform × Cloud-InitでVMセットアップをいい感じにする
+# Terraform × Cloud-InitでVMセットアップをいい感じにする vol.1
 
 ---
 
@@ -73,7 +73,7 @@ qm template <VM ID>
 
 ---
 
-## Netbird覚え書き
+<!-- ## Netbird覚え書き
 
 ### Netbirdのインストール
 
@@ -83,13 +83,15 @@ qm template <VM ID>
 - `netbird service start`を実行してNetbird deamonを起動
 - `netbird login`を実行して登録したVPNにログイン
 - `netbird up`を実行してnetbirdのネットワークに参加
-- `netbird status`を実行してステータスが`Connected`になっていればOK
+- `netbird status`を実行してステータスが`Connected`になっていればOK 
 
----
+--- -->
 
 ## Terraformを使ってProxmoxのcloud-initから自動デプロイ
 
 ### Proxmoxクラスタの設定
+
+[@ymbk990さんの記事][Proxmox VEとTerraformでインターン生に仮想マシンを払い出す話]を参考に、詳細な設定項目は`tfvars`にまとめるように作成します。
 
 - Terraform用の新しいロール`TerraformProvider`を作成
 
@@ -153,16 +155,24 @@ commands will detect it and remind you to do so if necessary.
 ```
 
 <details>
-<summary>各種VMの設定項目を記述する</summary>
+<summary>各種VMおよびリージョンの設定項目を記述する</summary>
 
-  - `backend.tf`の`local`にあるVMリソースの項目を適宜設定する
-    - `vm_name-0`: Cloud-Initで事前に作成したVMテンプレートの名前
-    - `vmid-0`: Proxmox VMID
-    - `clone-0`: Proxmoxクラスター上にデプロイされるVMの数
-    - `cores-0`: VMのコア数（デフォルトは1）
-    - `memory-0`: VMのメモリ数（デフォルトは2048MB）
-    - `disk_size-0`: VMのストレージ（デフォルトは2252MB）
-  - その他秘匿性の高い情報は`terraform.tfvars`を各自作成し、`terraform.tfvars.template`を参考に内容を記述すること
+  `backend.tf`の`local`にあるVMリソースの項目を適宜設定する
+  - Argument reference
+    - `storage_pool`: 使用するストレージ先　`cephfs` `local-lvm`から選択
+  
+  - VM config Ubuntu 22.04
+    - `os_name`: OSの名前
+    - `ci_name`: Cloud-Initで事前に作成したVMテンプレートの名前
+    - `description`: 概要
+    - `vmid`: Proxmox VMID
+    - `clone_num`: Proxmoxクラスター上にデプロイされるVMの数
+    - `cores`: VMのコア数（デフォルトは1）
+    - `memory`: VMのメモリ数（デフォルトは2048MB）
+    - `disk_size`: VMのストレージ（デフォルトは2252MB）
+  
+  その他秘匿性の高い情報は`terraform.tfvars`を各自作成する。  
+  `terraform.tfvars.template`を参考に内容を記述すること。
 
 </details>
 
@@ -204,22 +214,24 @@ Do you really want to destroy all resources?
 Destroy complete! Resources: 2 destroyed.
 ```
 
-***VMにログインできません！！！***
-
 ---
 
 ## 尾張に
+
+ここまでお疲れ様でした！今日からあなたもNekkoCloudのリージョン管理者の仲間入りです。今後の展望としては、Cloud-Initのテンプレートもワンクリックで作成できるようにしたいところ。今後の開発にご期待ください。
 
 ---
 
 ## 参考文献
 
 1. [cloud-initを使ったLinux OSの初期設定]
-2. [Terraformとは | IBM]
-3. [Proxmox Provider]
-4. [Proxmox上のLXCをTerraformで管理する]
+2. [Proxmox VEとTerraformでインターン生に仮想マシンを払い出す話]
+3. [Terraformとは | IBM]
+4. [Proxmox Provider]
+5. [Terraform Registry]
 
 [cloud-initを使ったLinux OSの初期設定]: https://qiita.com/yamada-hakase/items/40fa2cbb5ed669aaa85b
+[Proxmox VEとTerraformでインターン生に仮想マシンを払い出す話]: https://qiita.com/ymbk990/items/bd3973d2b858eb86e334
 [Terraformとは | IBM]: https://www.ibm.com/jp-ja/topics/terraform
 [Proxmox Provider]: https://registry.terraform.io/providers/Telmate/proxmox/latest/docs
-[Proxmox上のLXCをTerraformで管理する]: https://zenn.dev/bootjp/articles/692e8058e346b6
+[Terraform Registry]: https://registry.terraform.io/providers/Telmate/proxmox/latest/docs/resources/vm_qemu#disksxpassthrough-block
