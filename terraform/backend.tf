@@ -10,7 +10,7 @@ locals {
     scsi_ctl_type = "virtio-scsi-pci"
     type          = "virtio"
     storage_pool  = "local-lvm" # cephfs local-nvme local-lvm
-    qemu_agent    = 1
+    qemu_agent    = 0
 }
 
 # locals: VM config Ubuntu 22.04 nc-vm-ubuntu22.04
