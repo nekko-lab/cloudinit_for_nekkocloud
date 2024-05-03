@@ -44,7 +44,8 @@ resource "proxmox_vm_qemu" "nc-vm-1" {
         firewall = false
     }
 
-    ipconfig0               = "ip=${local.ip_add_net}${local.network_num + count.index}/24,gw=${local.ip_add_net}0"
+    ipconfig0               = "ip=${local.ip_add_net}${local.network_num + count.index}/24,gw=${local.ip_add_net}1"
+    nameserver              = "${local.ip_add_net}1"
     ciuser                  = "${var.username}"
     cipassword              = "${var.password}"
     sshkeys                 = var.public_key
