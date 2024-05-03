@@ -1,0 +1,17 @@
+# Terraform for ws1
+# git rm -r --cached .
+.DS_Store
+*.pdf
+*.exe
+*.zip
+*.tar.gz
+*.tgz
+*.log
+*.url
+.terraform.lock.hcl
+*.tfstate.lock.info
+terraform.tfstate.backup
+*.tfstate
+*.tfvars
+.terraform
+terraform-plugin-proxmox.log
