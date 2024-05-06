@@ -32,7 +32,69 @@ Application Programming Interfaces (APIs)が使えるほとんどのプラット
 
 作成したIMGファイルからテンプレートを作成して、クローンすることでVMのセットアップの手間を省くことができる。
 Cloud-Initはそれを可能にし、クラウドでのIaCを行う上では欠かせないツールである。
-ProxmoxでCloud-Initを使用し、各種VMのデプロイを自動化する。
+ProxmoxでCloud-Initを使用し、各種VMのデプロイを自動化する。  
+以下ではGUIとCLI両方の設定の仕方を紹介する。
+
+### GUIで設定を行う場合
+
+- Proxmox VEのGUIを開き、Cloud-Initを作成するノードのlocalを選択
+- ISO Imagesを選択し、使用するISOファイル[Ubuntu server Cloudimg 22.04LTS](https://cloud-images.ubuntu.com/)をアップロードする
+- 普段通りCreate VMを押してテンプレート用のVMを作成（ただし初回起動はまだしないように！bootのチェックも外しておく）
+- VM.Hardwareを選択し、AddからCloudInit Driveを選択する
+
+![CI-1](image/vmhw.png)
+
+- Cloud-Initの保存先を選択する
+
+![CI-2](image/vmci.png)
+
+- VM.Cloud-Initを選択すると、編集可能になっている
+- User, Password, IP Config（Gateway）を設定する
+
+![CI-3](image/vmciedit.png)
+
+- 設定が完了したら、右上のMoreからConvert to Templateを選択してテンプレートを作成
+- テンプレートが完成するとこんな感じの画面になる
+
+![CI-4](image/vmtemp.png)
+
+- Datacenterを選択。Permissions.Userを選択する
+- Addをクリックして、Terraformを実行するためのユーザを新規作成する
+
+![GUI-1](image/1.png)
+
+- 各種必要な項目を設定する（今回は適当にhogeを作成）
+
+![GUI-2](image/2.png)
+
+- 次に、Permissions.API Tokensへ移動し、同様にAddをクリックしてトークンの新規発行を行う
+  
+![GUI-3](image/3.png)
+
+- 先程作成したユーザを選択し、任意のToken IDを入力する（今回はhogehoge）
+- Privilege Separationのチェック欄を外しておく
+
+![GUI-4](image/4.png)
+
+- 発行したTokenとSecretは`terraform.tfvars`の`PM_API_TOKEN_ID`と`PM_API_TOKEN_SECRET`へそれぞれ張り付けておく
+
+![GUI-5](image/5.png)
+
+- Permissions.Rolesへ移動し、Createを選択
+- 新たにTerraformProviderというロールを作成する
+※この項目はCLIで行った方が楽ですね...
+
+![GUI-tfprov](image/tfprov.png)
+
+- 最後にPermissionへ移動し、Addを選択
+
+![GUI-6](image/6.png)
+
+- Path（/）、ユーザ（hoge）、ロール（TerraformProvider）を選択する
+
+![GUI-7](image/7.png)
+
+### CLIで設定を行う場合
 
 - Proxmoxのノードに入り、VMに使用するイメージをダウンロードする
   今回使用したイメージは[Ubuntu server Cloudimg 22.04LTS](https://cloud-images.ubuntu.com/)
@@ -53,7 +115,7 @@ qm create <VM ID> --memory 2048 --net0 virtio,bridge=vmbr0
 qm importdisk <VM ID> ubuntu-22.04-server-cloudimg-amd64.img local-lvm
 ```
 
-- VMをセットアップ
+- VMをセットアップ（nameserverはネットワークごとに任意のIPを設定）
 
 ```bash
 qm set <VM ID> --scsi0 local-lvm:0,import-from=/root/ubuntu-22.04-server-cloudimg-amd64.img
@@ -73,7 +135,7 @@ qm template <VM ID>
 
 ---
 
-<!-- ## Netbird覚え書き
+## Netbird覚え書き
 
 ### Netbirdのインストール
 
@@ -85,7 +147,7 @@ qm template <VM ID>
 - `netbird up`を実行してnetbirdのネットワークに参加
 - `netbird status`を実行してステータスが`Connected`になっていればOK 
 
---- -->
+---
 
 ## Terraformを使ってProxmoxのcloud-initから自動デプロイ
 
@@ -112,6 +174,7 @@ pveum aclmod / -user terraform-prov@pve -role TerraformProvider
 ```
 
 - `pvesh create /access/users/terraform-prov@pve/token/NekkoCloud --privsep 0`を実行してトークンを発行
+- 発行したTokenとSecretは`terraform.tfvars`の`PM_API_TOKEN_ID`と`PM_API_TOKEN_SECRET`へそれぞれ張り付けておく
 
 ```bash
 $ pvesh create /access/users/terraform-prov@pve/token/NekkoCloud --privsep 0
@@ -158,7 +221,9 @@ commands will detect it and remind you to do so if necessary.
 <summary>各種VMおよびリージョンの設定項目を記述する</summary>
 
   `backend.tf`の`local`にあるVMリソースの項目を適宜設定する
+
   - Argument reference
+    - `onboot`: デプロイ時にそのまま起動する デフォルトは`true`
     - `storage_pool`: 使用するストレージ先　`cephfs` `local-lvm`から選択
   
   - VM config Ubuntu 22.04
@@ -170,9 +235,27 @@ commands will detect it and remind you to do so if necessary.
     - `cores`: VMのコア数（デフォルトは1）
     - `memory`: VMのメモリ数（デフォルトは2048MB）
     - `disk_size`: VMのストレージ（デフォルトは2252MB）
-  
-  その他秘匿性の高い情報は`terraform.tfvars`を各自作成する。  
+
+</details>
+
+<details>
+<summary>tfvarsの設定項目について</summary>
+
   `terraform.tfvars.template`を参考に内容を記述すること。
+  
+  - PROXMOX PROVIDER CONFIGURATION
+    - `NC_REGION`: NekkoCloud PVE Regionの略語（幕張 => mk, 浦和 => ur, 津田沼 => tu）
+    - `PM_API_TOKEN_ID`: # Permissions.API Tokensで作成したAPI Token
+    - `PM_API_TOKEN_SECRET`: # Permissions.API Tokensで作成したAPI Secret
+    - `PM_HOST_IP`: 各PVEリージョンのIPのホスト部（Number）
+    - `NC_MK_IP`: 各PVEリージョンのIPのネットワーク部（XXX.XXX.XXX.）
+    - `NC_UR_IP`: 各PVEリージョンのIPのネットワーク部（XXX.XXX.XXX.）
+    - `NC_TU_IP`: 各PVEリージョンのIPのネットワーク部（XXX.XXX.XXX.）
+  - VM CONFIGURATION
+    - "vm_name": # VMの名前
+    - "username": # VMにログインするユーザネーム
+    - "password": # VMへのログイン時に必要なパスワード
+    - "public_key": # SSH用の公開鍵
 
 </details>
 
