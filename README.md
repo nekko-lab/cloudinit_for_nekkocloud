@@ -161,27 +161,27 @@ qm template <VM ID>
 pveum role add TerraformProvider -privs "Datastore.AllocateSpace Datastore.Audit Pool.Allocate Sys.Audit Sys.Console Sys.Modify VM.Allocate VM.Audit VM.Clone VM.Config.CDROM VM.Config.Cloudinit VM.Config.CPU VM.Config.Disk VM.Config.HWType VM.Config.Memory VM.Config.Network VM.Config.Options VM.Migrate VM.Monitor VM.PowerMgmt SDN.Use"
 ```
 
-- 新しいユーザ`terraform-prov@pve`を作成
+- 新しいユーザ`hoge@pve`を作成
 
 ```bash
-pveum user add terraform-prov@pve --password <password>
+pveum user add hoge@pve --password <password>
 ```
 
-- ロール`TerraformProvider`をユーザ`terraform-prov@pve`に追加
+- ロール`TerraformProvider`をユーザ`hoge@pve`に追加
 
 ```bash
-pveum aclmod / -user terraform-prov@pve -role TerraformProvider
+pveum aclmod / -user hoge@pve -role TerraformProvider
 ```
 
-- `pvesh create /access/users/terraform-prov@pve/token/NekkoCloud --privsep 0`を実行してトークンを発行
+- `pvesh create /access/users/hoge@pve/token/hogehoge --privsep 0`を実行してトークンを発行
 - 発行したTokenとSecretは`terraform.tfvars`の`PM_API_TOKEN_ID`と`PM_API_TOKEN_SECRET`へそれぞれ張り付けておく
 
 ```bash
-$ pvesh create /access/users/terraform-prov@pve/token/NekkoCloud --privsep 0
+$ pvesh create /access/users/hoge@pve/token/hogehoge --privsep 0
 ┌──────────────┬──────────────────────────────────────┐
 │ key          │ value                                │
 ╞══════════════╪══════════════════════════════════════╡
-│ full-tokenid │ terraform-prov@pve!NekkoCloud        │
+│ full-tokenid │ hoge@pve!hogehoge                    │
 ├──────────────┼──────────────────────────────────────┤
 │ info         │ {"privsep":"0"}                      │
 ├──────────────┼──────────────────────────────────────┤
