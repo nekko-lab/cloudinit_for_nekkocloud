@@ -18,7 +18,7 @@ locals {
   os_name     = "ubuntu"
   ci_name     = "nc-vm-ubuntu22.04"
   description = "Ubuntu 22.04 VM on Proxmox by Terraform"
-  vmid        = 10
+  vmid        = 40000
   clone_num   = 1
   cores       = 2
   memory      = 4096
@@ -36,10 +36,6 @@ terraform {
       version = "3.0.1-rc1"
     }
   }
-
-  # backend "local" {
-  #   path = "tfstate/terraform-.tfstate"
-  # }
 }
 
 # provider: Telmate Proxmox
