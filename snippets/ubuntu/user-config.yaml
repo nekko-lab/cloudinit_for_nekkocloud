@@ -1,0 +1,39 @@
+#cloud-config
+groups:
+  - admingroup: [root,sys,admin]
+  - cloud-users
+
+manage_etc_hosts: true
+disable_root: true
+
+passwd: $masato1234$
+ssh_authorized_keys:
+      - ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIGPYd3S3AYsTA3+vgM7b9gccvB+QaeOuKhwDdaapA6ZQ yuu4s@promotian
+
+users:
+  - default
+
+apt:
+  primary:
+  - arches: [default]
+    uri: http://ftp.udx.icscoe.jp/Linux/ubuntu/
+
+package_update: true
+package_upgrade: true
+
+packages:
+  - curl
+  - wget
+  - vim
+  - git
+  - unzip
+  - nano
+  - net-tools
+  - iputils-ping
+
+# output:
+#   init: "> /var/log/nc-cloud-init.log"
+#   config: [ ">> /tmp/nc-vm.out", "> /tmp/nc-vm.err" ]
+#   final:
+#     output: "| tee /tmp/final.stdout | tee /tmp/bar.stdout"
+#     error: "&1"

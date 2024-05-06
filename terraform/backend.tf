@@ -2,13 +2,11 @@
 # locals: Argument reference
 locals {
     target_node   = "${var.NC_REGION}-proxmox-1"
-    boot          = "order=virtio0"
+    boot          = "order=scsi0"
     onboot        = true
-    bootdisk      = "scsi0"
     os_type       = "cloud-init"
     cputype       = "host"
     scsi_ctl_type = "virtio-scsi-pci"
-    type          = "virtio"
     storage_pool  = "local-lvm" # cephfs local-nvme local-lvm
     qemu_agent    = 0
 }
@@ -33,14 +31,14 @@ terraform {
     required_providers {
         proxmox = {
             source  = "Telmate/proxmox"
-            version = "3.0.1-rc1"
+            version = "3.0.1-rc1"  # 2.9.14 3.0.1-rc1
         }
     }
 }
 
 # provider: Telmate Proxmox
 provider "proxmox" {
-    pm_api_url          = "https://${local.ip_add_net}${var.PM_HOST_NUM}:8006/api2/json"
+    pm_api_url          = "https://${local.ip_add_net}${var.PM_HOST_IP}:8006/api2/json"
     pm_api_token_id     = var.PM_API_TOKEN_ID
     pm_api_token_secret = var.PM_API_TOKEN_SECRET
     pm_tls_insecure     = var.PM_TLS_INSECURE

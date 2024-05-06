@@ -1,6 +1,6 @@
 # Description: This file contains the terraform configuration for creating a new VM on the Proxmox server.
 # proxmox_vm_qemu: nc-<Region Name>
-resource "proxmox_vm_qemu" "nc-vm-1" {
+resource "proxmox_vm_qemu" "nc-vm" {
     count = local.clone_num
     desc  = "${local.description}"
 
@@ -10,7 +10,7 @@ resource "proxmox_vm_qemu" "nc-vm-1" {
     os_type     = local.os_type
     boot        = local.boot
     onboot      = local.onboot
-    bootdisk    = local.bootdisk
+    # bootdisk    = "virtio0"
     clone       = local.ci_name
     cpu         = local.cputype
     cores       = local.cores
@@ -19,17 +19,16 @@ resource "proxmox_vm_qemu" "nc-vm-1" {
     scsihw      = local.scsi_ctl_type
 
     disks {
-        virtio {
-            virtio0 {
+        scsi {
+            scsi0 {
                 disk {
                     storage = local.storage_pool
                     size    = local.disk_size
                 }
             }
         }
-
-        scsi {
-            scsi0 {
+        virtio {
+            virtio0 {
                 disk {
                     storage = local.storage_pool
                     size    = local.disk_size
@@ -39,17 +38,19 @@ resource "proxmox_vm_qemu" "nc-vm-1" {
     }
 
     network {
-        model    = local.type
+        model    = "virtio"
         bridge   = "vmbr0"
         firewall = false
     }
-
-    ipconfig0               = "ip=${local.ip_add_net}${local.network_num + count.index}/24,gw=${local.ip_add_net}1"
-    nameserver              = "${local.ip_add_net}1"
-    ciuser                  = "${var.username}"
-    cipassword              = "${var.password}"
-    sshkeys                 = var.public_key
-    agent                   = local.qemu_agent
+    
+    # ipconfig0               = "ip=${local.ip_add_net}${local.network_num + count.index}/24,gw=${local.ip_add_net}1"
+    # nameserver              = "${local.ip_add_net}1"
+    # ciuser                  = "${var.username}"
+    # cipassword              = "${var.password}"
+    # sshkeys                 = var.public_key
+    agent                   = "${local.qemu_agent}"
+    
+    # cicustom                = "user=local:snippets/${local.os_name}/cloud-config.yaml,network=local:snippets/${local.os_name}/network-config.yaml"
     cloudinit_cdrom_storage	= local.storage_pool
 
     tags = "tf-${local.target_node}"

@@ -62,10 +62,10 @@ variable "PM_LOG_FILE" {
 }
 
 
-variable "PM_HOST_NUM" {
-    description = "The Proxmox VE host number"
+variable "PM_HOST_IP" {
+    description = "The Proxmox VE host address"
     type = number
-    default = 255
+    default = 254
 }
 
 
@@ -77,21 +77,21 @@ variable "NC_REGION" {
 
 
 variable "NC_MK_IP" {
-    description = "The NekkoCloud MK IP"
+    description = "The NekkoCloud MK network address"
     type = string
     default = ""
 }
 
 
 variable "NC_UR_IP" {
-    description = "The NekkoCloud UR IP"
+    description = "The NekkoCloud UR network address"
     type = string
     default = ""
 }
 
 
 variable "NC_TU_IP" {
-    description = "The NekkoCloud TU IP"
+    description = "The NekkoCloud TU network address"
     type = string
     default = ""
 }

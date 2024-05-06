@@ -229,9 +229,11 @@ Destroy complete! Resources: 2 destroyed.
 3. [Terraformとは | IBM]
 4. [Proxmox Provider]
 5. [Terraform Registry]
+6. [3.0.1-rc1 docs out of date]
 
 [cloud-initを使ったLinux OSの初期設定]: https://qiita.com/yamada-hakase/items/40fa2cbb5ed669aaa85b
 [Proxmox VEとTerraformでインターン生に仮想マシンを払い出す話]: https://qiita.com/ymbk990/items/bd3973d2b858eb86e334
 [Terraformとは | IBM]: https://www.ibm.com/jp-ja/topics/terraform
 [Proxmox Provider]: https://registry.terraform.io/providers/Telmate/proxmox/latest/docs
 [Terraform Registry]: https://registry.terraform.io/providers/Telmate/proxmox/latest/docs/resources/vm_qemu#disksxpassthrough-block
+[3.0.1-rc1 docs out of date]: https://github.com/Telmate/terraform-provider-proxmox/issues/932
