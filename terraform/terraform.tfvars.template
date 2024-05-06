@@ -1,22 +1,18 @@
 # PROXMOX PROVIDER CONFIGURATION
-NC_REGION           = ""    # Set Proxmox region: mk, ur, tu
-PM_API_TOKEN_ID     = ""    # Set Proxmox token
-PM_API_TOKEN_SECRET = ""    # Set Proxmox token secret
+NC_REGION           = ""    # Set Proxmox VE region ID: 'mk', 'ur', 'tu'
+PM_API_TOKEN_ID     = ""    # Set Proxmox API token
+PM_API_TOKEN_SECRET = ""    # Set Proxmox API secret
 PM_TLS_INSECURE     = "true"
 PM_DEBUG            = "true"
 PM_LOG_ENABLE       = "true"
 PM_LOG_LEVEL        = "debug"
-PM_HOST_IP          = XXX               # Proxmox VE`s IP host address
-NC_MK_IP            = "XXX.XXX.XXX."    # Proxmox VE Makuhari Region network address
-NC_UR_IP            = "XXX.XXX.XXX."    # Proxmox VE Urewa Region network address
-NC_TU_IP            = "XXX.XXX.XXX."    # Proxmox VE Tsudanuma Region network address
+PM_HOST_IP          = XXX   # Host part of Proxmox VE's IP address
+NC_MK_IP            = "XXX.XXX.XXX."    # Network part of Makuhari Region
+NC_UR_IP            = "XXX.XXX.XXX."    # Network part of Urewa Region
+NC_TU_IP            = "XXX.XXX.XXX."    # Network part of Tsudanuma Region
 
 # VM CONFIGURATION
-vm_name     = "nc-vm"
-username    = "user"
-password    = ""
-public_key  = ""
-private_key = <<EOF
------BEGIN OPENSSH PRIVATE KEY-----
------END OPENSSH PRIVATE KEY-----
-EOF
+vm_name     = "nc-vm"   # VM name
+username    = "user"   # VM user
+password    = "password"    # VM password
+public_key  = ""    # SSH key
