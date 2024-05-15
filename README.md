@@ -20,7 +20,7 @@
 
 Application Programming Interfaces (APIs)が使えるほとんどのプラットフォームでTerraformは使用可能なんだとか。すげー🙌
 
-### Proxmox VEのVM作成を自動化するメリット
+### Proxmox VEのVM作成をTerraformで自動化するメリット
 
 - 冪等性の確保
 - スケーラブルな変更
@@ -132,20 +132,6 @@ qm set <VM ID> --nameserver 192.168.0.1
 ```bash
 qm template <VM ID>
 ```
-
----
-
-## Netbird覚え書き
-
-### Netbirdのインストール
-
-### Netbirdの接続方法
-
-- `netbird service install`を実行してnetbirdをインストール
-- `netbird service start`を実行してNetbird deamonを起動
-- `netbird login`を実行して登録したVPNにログイン
-- `netbird up`を実行してnetbirdのネットワークに参加
-- `netbird status`を実行してステータスが`Connected`になっていればOK 
 
 ---
 
@@ -301,20 +287,26 @@ Destroy complete! Resources: 2 destroyed.
 
 ## おわりに
 
-ここまでお疲れ様でした！今日からあなたもNekkoCloudのリージョン管理者の仲間入りです。今後の展望としては、Cloud-Initのテンプレートもワンクリックで作成できるようにしたいところ。今後の開発にご期待ください。
+ここまでお疲れ様でした！今日からあなたもNekkoCloudのリージョン管理者の仲間入りです。
+今後の展望としては、Cloud-Initのテンプレートもワンクリックで作成できるようにしたいところ。
+今後の開発にご期待ください。
 
 ---
 
 ## 参考文献
 
 1. [cloud-initを使ったLinux OSの初期設定]
-2. [Proxmox VEとTerraformでインターン生に仮想マシンを払い出す話]
+2. [Proxmox VE cloud-init で Ubuntu 20.04 を起動する]
 3. [Terraformとは | IBM]
 4. [Proxmox Provider]
 5. [Terraform Registry]
+6. [Proxmox VEとTerraformでインターン生に仮想マシンを払い出す話]
+7. [Proxmox VEのcloudinitでuserdataを自由に調整する]
 
 [cloud-initを使ったLinux OSの初期設定]: https://qiita.com/yamada-hakase/items/40fa2cbb5ed669aaa85b
 [Proxmox VEとTerraformでインターン生に仮想マシンを払い出す話]: https://qiita.com/ymbk990/items/bd3973d2b858eb86e334
 [Terraformとは | IBM]: https://www.ibm.com/jp-ja/topics/terraform
+[Proxmox VE cloud-init で Ubuntu 20.04 を起動する]: https://blog.naa0yama.com/p/33w15-2j8gmw31/
+[Proxmox VEのcloudinitでuserdataを自由に調整する]: https://ainoniwa.net/pelican/2021-08-10a.html
 [Proxmox Provider]: https://registry.terraform.io/providers/Telmate/proxmox/latest/docs
 [Terraform Registry]: https://registry.terraform.io/providers/Telmate/proxmox/latest/docs/resources/vm_qemu#disksxpassthrough-block
