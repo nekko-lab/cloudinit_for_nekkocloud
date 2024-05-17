@@ -20,7 +20,7 @@
 
 上記の通りLinux OSのインスタンスの初期設定をいい感じに自動化してくれる優れもの。
 GUIとCLIどちらでも設定可能👍
-今回はTeraformのProxmox Providerを使って外部からUbuntuインスタンスの作成を目標にします。
+今回はTerraformのProxmox Providerを使って外部からUbuntuインスタンスの作成を目標にします。
 
 ### [Terraform][Terraformとは | IBM]とは
 
