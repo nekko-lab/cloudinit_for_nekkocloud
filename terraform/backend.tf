@@ -37,7 +37,7 @@ terraform {
     }
   }
 
-  backend "local" {}  # terraform init -reconfigure -backend-config="path=tfstate/username/project-name.tfstate"
+  backend "local" {}
 }
 
 # provider: Telmate Proxmox
