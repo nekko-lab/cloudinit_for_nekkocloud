@@ -22,10 +22,10 @@
 GUIとCLIどちらでも設定可能👍
 今回はTerraformのProxmox Providerを使って外部からUbuntuインスタンスの作成を目標にします。
 
-### [Terraform][Terraformとは | IBM]とは
+### [Terraform][What is Terraform?]とは
 
-Terraformは今のIaC時代を支える最もスタンダードなプロビジョニングツールです。
-IBMでは次のように紹介されています。
+HashiCorp社が提供するTerraformは今のInfrastructure as Code (IaC) 時代を支える最もスタンダードなプロビジョニングツールです。
+[IBM][Terraformとは | IBM]では次のように紹介されています。
 
 > Terraform は、クラウドおよびオンプレミスのリソースを安全かつ効率的に構築、変更、バージョン管理できるコード ツールとしてのインフラストラクチャです。
 
@@ -34,15 +34,17 @@ Application Programming Interfaces (APIs)が使えるほとんどのプラット
 
 ### Proxmox VEのVM作成をTerraformで自動化するメリット
 
-ぶっちゃけ「デファクトスタンダードだから」と言いたいところではあるんですが、さすがにそれだけだとエライ人に怒られちゃうからね。
+ぶっちゃけ「IaCのデファクトスタンダードだから😏」と言いたいところではあるんですが、さすがにそれだけだとエライ人に怒られちゃうからね。
 真面目にやります。  
-今回の選定理由はこんな感じでしょうかね？  
 
-- Proxmox Providerの豊富な機能  
-  今回はTelmate/proxmoxをProviderとしてしようしています。
-  バージョンは3.0.1-rc1です。
-  RC版を使用している理由は、CloudInitの柔軟なコンフィグ設定を実装しているためです。
-  今のところ動作に致命的な影響は出ていませんが、ロールバックも視野に入れつつ、CloudInitの恩恵を得るために今回選択しています。
+- Infrastructure as Code (IaC)
+  IaCとは、これまで手動で行っていた手順をコード化するということです。
+  インフラの設定内容がコード化されることで、設定の使いまわしが容易で確実になります。
+  そのため、同じ環境の再利用性が高いのが特徴です。
+  さらに、一部分のみ変更した環境を作成する際にかかる時間を従来より大幅に削減し、手動操作によるミスを起にくくすることが可能です。
+  また、gitによるバージョン管理が可能となり、インフラへ設定を適用する前のコードレビューが可能になります。
+  IaCの魅力とは、開発と運用に必要不可欠なスピードと安全性を備え、バージョン管理が可能でありバリデーションを実行でき、再利用が容易であることです。
+  あなたが扱う複雑なインフラのすべてが、たった数十行のソースコードにまとめてあるなんて、ステキなことだとは思いませんか？
 - 冪等性の確保  
   私たちはProxmox VEに対してステートレスなVM構築を目的としています。
   特に注目したいのは、TerraformのState Lockingです。
@@ -55,6 +57,20 @@ Application Programming Interfaces (APIs)が使えるほとんどのプラット
   OSの変更、CPUのコア数、メモリの容量、ストレージの大きさ...それらすべては変数の値を変えるだけで実現できる。
   ネットワークの設定やVMIDの紐づけ、SSHキーの保存、複数台のVMの同時デプロイ。
   Terraformが有している協力なプロビジョニング機能は、初めて車を納車した人のように、利用者の苦労を一気に解決してくれます。
+
+### Terraformの選定理由について
+
+今回の選定理由はこんな感じでしょうかね？  
+
+- Proxmox Providerの豊富な機能  
+  今回はTelmate/proxmoxをProviderとして使用しています。
+  バージョンは3.0.1-rc1です。
+  RC版を使用している理由は、CloudInitの柔軟なコンフィグ設定を実装しているためです。
+  今のところ動作に致命的な影響は出ていませんが、ロールバックも視野に入れつつ、CloudInitの恩恵を得るために今回選択しています。
+- プロビジョニングツールとしての信頼性
+  これまで、Terraformは多くのクラウドサービスで採用されてきた実績があります。
+  プロビジョニングツールの最大の利点は、インフラに関するほどんどあらゆる項目をソースコードで定義することができる点です。
+  堅牢なコードでインフラを体系化することができ、プロバイダに対して常にステートレスなプロビジョニングを実行できます。
 
 ---
 
@@ -377,18 +393,20 @@ IaC導入の一番のメリットは、インフラストラクチャの自動�
 
 1. [cloud-initを使ったLinux OSの初期設定]
 2. [Proxmox VE cloud-init で Ubuntu 20.04 を起動する]
-3. [Terraformとは | IBM]
-4. [サーバーレスが気になる開発者に捧ぐ「べき等性」ことはじめ]
-5. [Terraform面接質問集を作ってみた]
-6. [Terraform のコマンド、オプションを出来るだけ使ってみる]
-7. [Proxmox Provider]
-8. [Terraform Registry]
-9. [Proxmox VEとTerraformでインターン生に仮想マシンを払い出す話]
-10. [Proxmox VEのcloudinitでuserdataを自由に調整する]
-11. [道を照らす: プラットフォーム エンジニアリング、ゴールデンパス、セルフサービスのパワー]
+3. [What is Terraform?]
+4. [Terraformとは | IBM]
+5. [サーバーレスが気になる開発者に捧ぐ「べき等性」ことはじめ]
+6. [Terraform面接質問集を作ってみた]
+7. [Terraform のコマンド、オプションを出来るだけ使ってみる]
+8. [Proxmox Provider]
+9. [Terraform Registry]
+10. [Proxmox VEとTerraformでインターン生に仮想マシンを払い出す話]
+11. [Proxmox VEのcloudinitでuserdataを自由に調整する]
+12. [道を照らす: プラットフォーム エンジニアリング、ゴールデンパス、セルフサービスのパワー]
 
 [cloud-initを使ったLinux OSの初期設定]: https://qiita.com/yamada-hakase/items/40fa2cbb5ed669aaa85b
 [Proxmox VEとTerraformでインターン生に仮想マシンを払い出す話]: https://qiita.com/ymbk990/items/bd3973d2b858eb86e334
+[What is Terraform?]: https://developer.hashicorp.com/terraform
 [Terraformとは | IBM]: https://www.ibm.com/jp-ja/topics/terraform
 [サーバーレスが気になる開発者に捧ぐ「べき等性」ことはじめ]: https://aws.amazon.com/jp/builders-flash/202104/serverless-idempotency/
 [Terraform面接質問集を作ってみた]: https://qiita.com/to-fmak/items/9f3c00d478296f1ed9d2
