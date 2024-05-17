@@ -9,6 +9,7 @@
 - cloud initはLinuxの初期設定を簡単にするもの
 - Proxmox VEをTerraformで楽ちんにする方法をメモしたもの
 - Terraform大好き😍chu❤️‍🔥
+- 
 
 ### [cloud init][cloud-initを使ったLinux OSの初期設定]とは
 
