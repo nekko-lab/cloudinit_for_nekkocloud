@@ -1,4 +1,4 @@
-# Terraform × Cloud-InitでVMのセットアップをいい感じにする vol.1
+# Terraform × cloud-initでVMのセットアップをいい感じにする vol.1
 
 ---
 
@@ -8,19 +8,24 @@
 ここでは、ネットワークコンテンツ研究会のプロジェクトの一つであるNekkoCloudにIaCを導入し、NekkoCloudの環境構築の自動化を目的とします。
 最近流行ってるじゃないですか、やれIaaSだのKaaSだのSaaSだの...。
 私たちのNekkoCloudだってイカしたプロビジョニングツールを導入して、チームメンバーのみんなが自由に計算リソースを使える環境を用意したいんです！
-ってことで、Proxmox VEのVM作成をTerraformとCloud-Initを使って簡単にできるようにする、そんな感じのリポジトリです🌟
+ってことで、Proxmox VEのVM作成をTerraformとcloud-initを使って簡単にできるようにする、そんな感じのリポジトリです🌟  
 
 ### TL;DR
 
-- cloud initはLinux OSの初期設定を簡単にするもの
-- Proxmox VEをTerraformで楽ちんにする方法をメモしたもの
-- Terraform大好き😍chu❤️‍🔥
+- Proxmox VEのVM構築をcloud-initとTerraformを利用して、簡略化かつIaC対応できるようにしたもの
+- Proxmox VEにcloud-initをセットアップする方法の紹介
+- Terraformの基本操作とtfstateを保護するための応用例
 
-### [cloud init][cloud-initを使ったLinux OSの初期設定]とは
+### [cloud-init][cloud-initを使ったLinux OSの初期設定]とは
 
-上記の通りLinux OSのインスタンスの初期設定をいい感じに自動化してくれる優れもの。GUIとCLIどちらでも設定可能。今回はTeraformのProxmox Providerを使って外部からUbuntuインスタンスの作成を目標とする。
+上記の通りLinux OSのインスタンスの初期設定をいい感じに自動化してくれる優れもの。
+GUIとCLIどちらでも設定可能👍
+今回はTeraformのProxmox Providerを使って外部からUbuntuインスタンスの作成を目標にします。
 
 ### [Terraform][Terraformとは | IBM]とは
+
+Terraformは今のIaC時代を支える最もスタンダードなプロビジョニングツールです。
+IBMでは次のように紹介されています。
 
 > Terraform は、クラウドおよびオンプレミスのリソースを安全かつ効率的に構築、変更、バージョン管理できるコード ツールとしてのインフラストラクチャです。
 
@@ -33,20 +38,17 @@ Application Programming Interfaces (APIs)が使えるほとんどのプラット
 真面目にやります。  
 今回の選定理由はこんな感じでしょうかね？  
 
-- 作業効率の向上  
-  これにつきます。
-  でも、もっとよくできると考えてます。
-  なので、次の目標はTerraformコマンドの実行をすべてDiscord上で行えるようにします。
 - Proxmox Providerの豊富な機能  
   今回はTelmate/proxmoxをProviderとしてしようしています。
   バージョンは3.0.1-rc1です。
   RC版を使用している理由は、CloudInitの柔軟なコンフィグ設定を実装しているためです。
   今のところ動作に致命的な影響は出ていませんが、ロールバックも視野に入れつつ、CloudInitの恩恵を得るために今回選択しています。
 - 冪等性の確保  
-  Proxmox VEに対してステートレスなVM構築を目的としています。
+  私たちはProxmox VEに対してステートレスなVM構築を目的としています。
   特に注目したいのは、TerraformのState Lockingです。
-  これは、複数のユーザがサーバに対して変更や操作を実行しようとしたときに、
-  ここで深堀りはしませんが、気になる人は[コチラ][サーバーレスが気になる開発者に捧ぐ「べき等性」ことはじめ]の記事をお読みになってください。
+  これは、複数のユーザがサーバに対して変更や操作を実行しようとしたときに、変更によるファイルの競合を防ぐ機能です。
+  tfstateファイルにロックがかかると、他のユーザはそのtfstateファイルの変更はできないので、堅牢性に優れています。
+  ここで冪等性については深堀りしませんが、気になる人は[コチラ][サーバーレスが気になる開発者に捧ぐ「べき等性」ことはじめ]の記事をお読みになってください。
 - スケーラブルな変更  
   私たちが求めているのは、プログラムの関数のように引数に入れる値を変更するだけで、VMの仕様を変更できる「手軽さ」です。
   今回作成したtfファイルでは、所見の人がパラメータをいじくる場所を極力一か所に集中するように設計しています。
@@ -56,27 +58,27 @@ Application Programming Interfaces (APIs)が使えるほとんどのプラット
 
 ---
 
-## Cloud-Initの使い方
+## cloud-initの使い方
 
 作成したIMGファイルからテンプレートを作成して、クローンすることでVMのセットアップの手間を省くことができる。
-Cloud-Initはそれを可能にし、クラウドでのIaCを行う上では欠かせないツールである。
-ProxmoxでCloud-Initを使用し、各種VMのデプロイを自動化する。  
+cloud-initはそれを可能にし、クラウドでのIaCを行う上では欠かせないツールである。
+Proxmoxでcloud-initを使用し、各種VMのデプロイを自動化する。  
 以下ではGUIとCLI両方の設定の仕方を紹介する。
 
 ### GUIで設定を行う場合
 
-- Proxmox VEのGUIを開き、Cloud-Initを作成するノードのlocalを選択
+- Proxmox VEのGUIを開き、cloud-initを作成するノードのlocalを選択
 - ISO Imagesを選択し、使用するISOファイル[Ubuntu server Cloudimg 22.04LTS](https://cloud-images.ubuntu.com/)をアップロードする
 - 普段通りCreate VMを押してテンプレート用のVMを作成（ただし初回起動はまだしないように！bootのチェックも外しておく）
 - VM.Hardwareを選択し、AddからCloudInit Driveを選択する
 
 ![CI-1](image/vmhw.png)
 
-- Cloud-Initの保存先を選択する
+- cloud-initの保存先を選択する
 
 ![CI-2](image/vmci.png)
 
-- VM.Cloud-Initを選択すると、編集可能になっている
+- VM.cloud-initを選択すると、編集可能になっている
 - User, Password, IP Config（Gateway）を設定する
 
 ![CI-3](image/vmciedit.png)
@@ -205,7 +207,7 @@ $ pvesh create /access/users/hoge@pve/token/hogehoge --privsep 0
 
 ### TerraformでVMをデプロイ
 
-このリポジトリをローカルにクローンしていることが前提です。  
+ここからは、このリポジトリをローカルにクローンしていることが前提です。  
 ま、ここまで読んでくれた人はさすがにもうやってくれてるよね？😁👍
 
 - `cd .\terraform`でtfファイルが保存されたディレクトリへ移動
@@ -242,12 +244,13 @@ commands will detect it and remind you to do so if necessary.
 > Terraformでは、インフラストラクチャの状態を記録するtfstateファイルが存在します。
 > このファイルは、プロビジョニングにおける作成リソースやプラグインの依存関係など重要な情報を含みます。  
 > そして、致命的なのは、以前建てたtfstateファイルを保護せずに次のVMをデプロイしてしまうと、tfstateファイルが上書きされてしまい、結果現在動作しているVMを破壊した後に新たにVMをデプロイしてしまいます。  
-> この現象を回避するには、予めtfstateファイルの保存先をプロジェクトごとに分けておく必要があります。TerraformのBackendオプションを使って初期化時に保存先を宣言すると、セキュアなプロビジョニングを実現できます。  
+> この現象を回避するには、予めtfstateファイルの保存先をプロジェクトごとに分けておく必要があります。
+> TerraformのBackendオプションを使って初期化時に保存先を宣言すると、セキュアなプロビジョニングを実現できます。  
 > 
 > `terraform init -reconfigure -backend-config="path=tfstate/username/project-name.tfstate"`  
 >
 > `-reconfigure`は既存のtfstateファイルの有無に関係なく、設定を再構成します。
-> `-backend-config="path=tfstate/username/project-name.tfstate"`でtfstateファイルの保存先を設定します。
+> `-backend-config`でtfstateファイルの保存先を設定します。
 
 <details>
 <summary>各種VMおよびリージョンの設定項目を記述する</summary>
@@ -260,7 +263,7 @@ commands will detect it and remind you to do so if necessary.
   
   - VM config Ubuntu 22.04
     - `os_name`: OSの名前
-    - `ci_name`: Cloud-Initで事前に作成したVMテンプレートの名前
+    - `ci_name`: cloud-initで事前に作成したVMテンプレートの名前
     - `description`: 概要
     - `vmid`: Proxmox VMID
     - `clone_num`: Proxmoxクラスター上にデプロイされるVMの数
@@ -283,6 +286,7 @@ commands will detect it and remind you to do so if necessary.
     - `NC_MK_IP`: 各PVEリージョンのIPのネットワーク部（XXX.XXX.XXX.）
     - `NC_UR_IP`: 各PVEリージョンのIPのネットワーク部（XXX.XXX.XXX.）
     - `NC_TU_IP`: 各PVEリージョンのIPのネットワーク部（XXX.XXX.XXX.）
+
   - VM CONFIGURATION
     - "vm_name": # VMの名前
     - "username": # VMにログインするユーザネーム
@@ -292,8 +296,8 @@ commands will detect it and remind you to do so if necessary.
 </details>
 
 - `terraform plan`を実行してtfファイルに問題が無いか確認を行ってもらう
-- `terraform apply`を実行してデプロイ
-  `yes`と入力して開始！
+- `terraform apply`を実行してデプロイ  
+  `yes`と入力して開始！  
 
 ```bash
 $ terraform apply
@@ -301,15 +305,15 @@ Do you want to perform these actions?
   Terraform will perform the actions described above.
   Only 'yes' will be accepted to approve.
 
-  Enter a value: 
+  Enter a value: yes
 
 ~~~
 
 Apply complete! Resources: 1 added, 0 changed, 0 destroyed.
 ```
 
-- VMを削除する場合は`terraform destroy`を実行する
-  `yes`と入力して開始！
+- VMを削除する場合は`terraform destroy`を実行する  
+  `yes`と入力して開始！  
 
 ```bash
 $ terraform destroy
@@ -322,7 +326,7 @@ Do you really want to destroy all resources?
   Terraform will destroy all your managed infrastructure, as shown above.
   There is no undo. Only 'yes' will be accepted to confirm.
 
-  Enter a value:
+  Enter a value: yes
 
 ~~~
 
@@ -337,20 +341,35 @@ Destroy complete! Resources: 2 destroyed.
 > `terraform apply --auto-approve -state=tfstate/username/project-name.tfstate -backup=tfstate/username/project-name.tfstate.backup`
 > 
 > `--auto-approve`は変更確認の入力`yes`を省略します。
-> `-state`はtfstateファイルのパスを指定します。
-> `-backup`はtfstate.backupのパスを指定します。
+> `-state`は先程と同じtfstateファイルのパスを指定します。
+> `-backup`はtfstate.backupを保存するためのパスを指定します。
 
 ---
 
 ## おわりに
 
-ここまでお疲れ様でした！今日からあなたもNekkoCloudのリージョン管理者の仲間入りです。
-今後の展望としては、Cloud-Initのテンプレートもワンクリックで作成できるようにしたいところさんですね。
-あと、現在DiscordBotでVMのデプロイを行うツールを開発中です。
-今後の開発にご期待ください！🫡
-それではまた👋
+ここまでお疲れ様でした！今日からあなたもNekkoCloudのリージョン管理者の仲間入りです🙌  
+今回のIaC実装を経て、チームメンバーの作業効率の向上に関する課題は多く残っていると考えています。
+チームメンバーが求めているものは、自由に触って好きなように作ったり壊したりできるVMを、いつでも使える環境ではないでしょうか？
+IaC導入の一番のメリットは、インフラストラクチャの自動構築です。
+これは、NekkoCloudの各リージョン管理者からの視点では一定水準をクリアしたと認識しています。
+では、リージョン管理者以外のチームメンバーは、VMを作成するのに一からTerraformを学ぶ必要があるのでしょうか？
+それは本来やりたいことからかけ離れた、あまりにも遠回りな選択肢なのです。  
+とまあ、説教垂れててもこういった労苦（Toil: トイル）は消えて無くなったりしないので、一つずつテクノロジーを使って解決していきましょう。
+今ここでチョロっと話した、いわゆる「ゴールデンパス」に関するお話は[コチラ][道を照らす: プラットフォーム エンジニアリング、ゴールデンパス、セルフサービスのパワー]の記事で詳しく述べています。  
+
+ではでは、今後の開発にご期待ください！🫡  
+そんじゃまた👋
 
 [cyokozai](https://x.com/cyokozai0)
+
+### 追伸
+
+- cloud-initのテンプレートもワンクリックで作成できるようにしたいので、CloudConfig.yaml周りを調査中であります🫡  
+- 現在DiscordBotでVMのデプロイを行うツールを開発中です。  
+  他の開発メンバーも交えて、本格的にチームメンバーへのVMの払い出しを念頭に置いたシステム開発を行っています。  
+
+**乞うご期待！！**
 
 ---
 
@@ -366,6 +385,7 @@ Destroy complete! Resources: 2 destroyed.
 8. [Terraform Registry]
 9. [Proxmox VEとTerraformでインターン生に仮想マシンを払い出す話]
 10. [Proxmox VEのcloudinitでuserdataを自由に調整する]
+11. [道を照らす: プラットフォーム エンジニアリング、ゴールデンパス、セルフサービスのパワー]
 
 [cloud-initを使ったLinux OSの初期設定]: https://qiita.com/yamada-hakase/items/40fa2cbb5ed669aaa85b
 [Proxmox VEとTerraformでインターン生に仮想マシンを払い出す話]: https://qiita.com/ymbk990/items/bd3973d2b858eb86e334
@@ -377,3 +397,4 @@ Destroy complete! Resources: 2 destroyed.
 [Proxmox VEのcloudinitでuserdataを自由に調整する]: https://ainoniwa.net/pelican/2021-08-10a.html
 [Proxmox Provider]: https://registry.terraform.io/providers/Telmate/proxmox/latest/docs
 [Terraform Registry]: https://registry.terraform.io/providers/Telmate/proxmox/latest/docs/resources/vm_qemu#disksxpassthrough-block
+[道を照らす: プラットフォーム エンジニアリング、ゴールデンパス、セルフサービスのパワー]: https://cloud.google.com/blog/ja/products/application-development/golden-paths-for-engineering-execution-consistency
