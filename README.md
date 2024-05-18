@@ -67,11 +67,30 @@ Application Programming Interfaces (APIs)が使えるほとんどのプラット
 
 ### Proxmox Providerの選定理由
 
+今回は[Telmate/proxmox][Telmate/terraform-provider-proxmox]をProxmox Providerとして使用しています。
+Terraformで選択可能なProxmoxのプロバイダはいくつか存在します。
+今回はその中からTelmateと[BPG][bpg/terraform-provider-proxmox]の2つを比較しました。
+Telmateの選定理由については以下の通りです。  
+
 - 豊富な機能  
-  今回はTelmate/proxmoxをProviderとして使用しています。
-  バージョンは3.0.1-rc1です。
+  Telmate/proxmoxのバージョンは3.0.1-rc1です。
   RC版を使用している理由は、CloudInitの柔軟なコンフィグ設定を実装しているためです。
-  今のところ動作に致命的な影響は出ていませんが、ロールバックも視野に入れつつ、CloudInitの恩恵を得るために今回選択しています。
+  今のところ動作に致命的な影響は出ていませんが、ロールバックも視野に入れつつ、CloudInitの恩恵を最大限得るために今回選択しています。
+- コミュニティが活発である  
+  開発コミュニティの活動が活発であることは大切な要素だと考えています。
+  サポートが終了していたり、バージョンの更新が滞っているようなOSSはとても使えません。
+  ソースコードの最終更新日やイシューのやり取りなどを確認することで、コミュニティの活動状況をある程度把握できるでしょう。
+  この点では、TelmateとBPGは双方活発なイシューが交わされており、今後のサービスの発展が期待されます。
+- バージョンのアップデートは破壊的更新ではないか  
+  今回の選定理由の決め手はこの要素にあります。
+  Telmateは、既に3回のメジャーアップデートを行っており、Terraformプロバイダとしての機能は高いレベルで成熟してきていると言えます。
+  しかし、BPGは未だメジャーアップデートは行われておらず、マイナーアップデートを頻繁に行っている状況です。
+  Terraformの使用場面を考えると安定稼働は必須なため、頻繁に破壊的なアップデートが発生するプロバイダは正直怖くて使えません。
+
+こんな感じでしょうかね...。  
+あまりこういうのは書きなれていないので、拙い文章で申し訳ないです。
+ちなみに今回は見送ったBPGですが、こちらも実装されている機能の側面では、Telmate以上のポテンシャルを秘めていると思います。
+メジャーアップデートの到来を期待しつつ、こちらの動作検証も並行して進めていきたいですね。
 
 ---
 
@@ -399,11 +418,13 @@ IaC導入の一番のメリットは、インフラストラクチャの自動�
 5. [サーバーレスが気になる開発者に捧ぐ「べき等性」ことはじめ]
 6. [Terraform面接質問集を作ってみた]
 7. [Terraform のコマンド、オプションを出来るだけ使ってみる]
-8. [Proxmox Provider]
-9. [Terraform Registry]
-10. [Proxmox VEとTerraformでインターン生に仮想マシンを払い出す話]
-11. [Proxmox VEのcloudinitでuserdataを自由に調整する]
-12. [道を照らす: プラットフォーム エンジニアリング、ゴールデンパス、セルフサービスのパワー]
+8. [Telmate/terraform-provider-proxmox]
+9. [bpg/terraform-provider-proxmox]
+10. [Proxmox Provider]
+11. [Terraform Registry]
+12. [Proxmox VEとTerraformでインターン生に仮想マシンを払い出す話]
+13. [Proxmox VEのcloudinitでuserdataを自由に調整する]
+14. [道を照らす: プラットフォーム エンジニアリング、ゴールデンパス、セルフサービスのパワー]
 
 [cloud-initを使ったLinux OSの初期設定]: https://qiita.com/yamada-hakase/items/40fa2cbb5ed669aaa85b
 [Proxmox VEとTerraformでインターン生に仮想マシンを払い出す話]: https://qiita.com/ymbk990/items/bd3973d2b858eb86e334
@@ -412,6 +433,8 @@ IaC導入の一番のメリットは、インフラストラクチャの自動�
 [サーバーレスが気になる開発者に捧ぐ「べき等性」ことはじめ]: https://aws.amazon.com/jp/builders-flash/202104/serverless-idempotency/
 [Terraform面接質問集を作ってみた]: https://qiita.com/to-fmak/items/9f3c00d478296f1ed9d2
 [Terraform のコマンド、オプションを出来るだけ使ってみる]: https://qiita.com/takkii1010/items/082c0854fd41bc0b26c3
+[Telmate/terraform-provider-proxmox]: https://github.com/Telmate/terraform-provider-proxmox
+[bpg/terraform-provider-proxmox]: https://github.com/bpg/terraform-provider-proxmox
 [Proxmox VE cloud-init で Ubuntu 20.04 を起動する]: https://blog.naa0yama.com/p/33w15-2j8gmw31/
 [Proxmox VEのcloudinitでuserdataを自由に調整する]: https://ainoniwa.net/pelican/2021-08-10a.html
 [Proxmox Provider]: https://registry.terraform.io/providers/Telmate/proxmox/latest/docs
