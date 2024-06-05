@@ -1,4 +1,4 @@
-# Terraform × cloud-initでVMのセットアップをいい感じにする vol.1
+# Terraform × cloud-initでVMのセットアップをいい感じにする
 
 ---
 
