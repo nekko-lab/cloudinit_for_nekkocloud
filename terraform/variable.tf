@@ -62,39 +62,23 @@ variable "PM_LOG_FILE" {
 }
 
 
-variable "PM_HOST_IP" {
-  description = "The Proxmox VE host number"
-  type        = number
-  default     = 255
-}
-
-
 variable "NC_REGION" {
   description = "The NekkoCloud region"
   type        = string
-  default     = "none"
+  default     = ""  # Set Proxmox region: mk, ur, tu
 }
 
 
-variable "NC_MK_IP" {
-  description = "The NekkoCloud MK IP"
-  type        = string
-  default     = ""
+variable "NC_REGION_IP" {
+  description = "The NekkoCloud region IPv6 address"
+  type        = map(string)
+  default     = {
+    "mk" = "fd12:e644:6d9d:00::",
+    "ur" = "fd12:e644:6d9d:01::",
+    "tu" = "fd12:e644:6d9d:02::"
+  }
 }
 
-
-variable "NC_UR_IP" {
-  description = "The NekkoCloud UR IP"
-  type        = string
-  default     = ""
-}
-
-
-variable "NC_TU_IP" {
-  description = "The NekkoCloud TU IP"
-  type        = string
-  default     = ""
-}
 
 # VM CONFIGURATION
 variable "vm_name" {

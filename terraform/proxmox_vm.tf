@@ -50,7 +50,6 @@ resource "proxmox_vm_qemu" "nc-vm-1" {
   cipassword              = var.password
   sshkeys                 = var.public_key
   agent                   = local.qemu_agent
-  cloudinit_cdrom_storage = local.storage_pool
 
   tags = "tf-${local.target_node}"
 }

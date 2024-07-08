@@ -25,7 +25,7 @@ locals {
   disk_size   = 32
   sockets     = 1
   network_num = 80
-  ip_add_net  = var.NC_REGION == "mk" ? var.NC_MK_IP : var.NC_REGION == "ur" ? var.NC_UR_IP : var.NC_REGION == "tu" ? var.NC_TU_IP : var.NC_MK_IP
+  ip_add_net  = var.NC_REGION_IP[var.NC_REGION]
 }
 
 # provider: Telmate Proxmox
@@ -33,7 +33,7 @@ terraform {
   required_providers {
     proxmox = {
       source  = "Telmate/proxmox"
-      version = "3.0.1-rc1"
+      version = "3.0.1-rc3"
     }
   }
 
@@ -42,7 +42,7 @@ terraform {
 
 # provider: Telmate Proxmox
 provider "proxmox" {
-  pm_api_url          = "https://${local.ip_add_net}${var.PM_HOST_IP}:8006/api2/json"
+  pm_api_url          = "https://[${local.ip_add_net}101]:8006/api2/json"
   pm_api_token_id     = var.PM_API_TOKEN_ID
   pm_api_token_secret = var.PM_API_TOKEN_SECRET
   pm_tls_insecure     = var.PM_TLS_INSECURE
