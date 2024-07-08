@@ -1,5 +1,7 @@
 # Terraform × cloud-initでVMのセットアップをいい感じにする
 
+## IPv6対応
+
 ---
 
 ## はじめに
