@@ -11,7 +11,7 @@
 .terraform.lock.hcl
 *.tfstate.lock.info
 terraform.tfstate.backup
-*.tfstate
+*tfstate
 *.tfvars
 .terraform
 terraform-plugin-proxmox.log
