@@ -1,22 +1,22 @@
 # Description: This file contains the configuration for the backend of the terraform state file. This file is used to store the state file in the Proxmox server.
 # locals: Argument reference
 locals {
-  target_node   = "${var.NC_REGION}-proxmox-1"
-  boot          = "order=virtio0"
+  target_node   = "${var.NC_REGION}"
+  boot          = "order=scsi0"
   onboot        = true
   bootdisk      = "scsi0"
   os_type       = "cloud-init"
   cputype       = "host"
-  scsi_ctl_type = "virtio-scsi-pci"
+  scsi_ctl_type = "virtio-scsi-single"
   type          = "virtio"
-  storage_pool  = "local-lvm" # cephfs local-lvm
+  storage_pool  = "local-nvme-1" # cephfs local-nvme local-lvm
   qemu_agent    = 0
 }
 
 # locals: VM config Ubuntu 22.04 nc-vm-ubuntu22.04
 locals {
   os_name     = "ubuntu"
-  ci_name     = "nc-vm-ubuntu22.04"
+  ci_name     = "Ubuntu-server-Cloudimg-22.04"
   description = "Ubuntu 22.04 VM on Proxmox by Terraform"
   vmid        = 40000
   clone_num   = 1
@@ -25,7 +25,7 @@ locals {
   disk_size   = 32
   sockets     = 1
   network_num = 80
-  ip_add_net  = var.NC_REGION_IP[var.NC_REGION]
+  ip_add_net  = var.NC_REGION_DEV_IP[var.NC_REGION]
 }
 
 # provider: Telmate Proxmox

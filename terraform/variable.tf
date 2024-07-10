@@ -69,13 +69,24 @@ variable "NC_REGION" {
 }
 
 
-variable "NC_REGION_IP" {
+variable "NC_REGION_DEV_IP" {
   description = "The NekkoCloud region IPv6 address"
   type        = map(string)
   default     = {
-    "mk" = "fd12:e644:6d9d:00::",
-    "ur" = "fd12:e644:6d9d:01::",
-    "tu" = "fd12:e644:6d9d:02::"
+    "mk" = "fd12:e644:6d9d:0000::",
+    "ur" = "fd12:e644:6d9d:0100::",
+    "tu" = "fd12:e644:6d9d:0200::"
+  }
+}
+
+
+variable "NC_REGION_PROD_IP" {
+  description = "The NekkoCloud region IPv6 address"
+  type        = map(string)
+  default     = {
+    "mk" = "fd12:e644:6d9d:0080::",
+    "ur" = "fd12:e644:6d9d:0180::",
+    "tu" = "fd12:e644:6d9d:0280::"
   }
 }
 

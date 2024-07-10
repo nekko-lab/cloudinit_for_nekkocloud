@@ -19,14 +19,14 @@ resource "proxmox_vm_qemu" "nc-vm-1" {
   scsihw      = local.scsi_ctl_type
 
   disks {
-    virtio {
-      virtio0 {
-        disk {
-          storage = local.storage_pool
-          size    = local.disk_size
-        }
-      }
-    }
+    # virtio {
+    #   virtio0 {
+    #     disk {
+    #       storage = local.storage_pool
+    #       size    = local.disk_size
+    #     }
+    #   }
+    # }
 
     scsi {
       scsi0 {
@@ -39,17 +39,16 @@ resource "proxmox_vm_qemu" "nc-vm-1" {
   }
 
   network {
-    model    = local.type
-    bridge   = "vmbr0"
+    model    = "virtio"
+    bridge   = "vmbr1001"
     firewall = false
   }
 
-  ipconfig0  = "ip=${local.ip_add_net}${local.network_num + count.index}/24,gw=${local.ip_add_net}1"
+  ipconfig0  = "ip=dhcp,ip6=auto"
+  # "ipv6=${local.ip_add_net}${local.network_num + count.index}/24,gwv6=${local.ip_add_net}1"
   nameserver = "${local.ip_add_net}1"
   ciuser     = var.username
   cipassword = var.password
   sshkeys    = var.public_key
   agent      = local.qemu_agent
-
-  tags = "tf-${local.target_node}"
 }
