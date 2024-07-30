@@ -172,7 +172,7 @@ wget https://cloud-images.ubuntu.com/jammy/current/jammy-server-cloudimg-amd64.i
 - テンプレート用のVMを作成
 
 ```bash
-qm create <VM ID> --memory 2048 --net0 virtio,bridge=vmbr0
+qm create <VM ID> --memory 4096 --net0 virtio,bridge=vmbr0
 ```
 
 - localのstorageにISOファイルをインポート
@@ -184,12 +184,11 @@ qm importdisk <VM ID> ubuntu-22.04-server-cloudimg-amd64.img local-lvm
 - VMをセットアップ（nameserverはネットワークごとに任意のIPを設定）
 
 ```bash
-qm set <VM ID> --scsi0 local-lvm:0,import-from=/root/ubuntu-22.04-server-cloudimg-amd64.img
 qm set <VM ID> --name <VM Name>
 qm set <VM ID> --scsihw virtio-scsi-pci --virtio0 local-lvm:vm-<VM ID>-disk-0
+qm set <VM ID> --virtio0 local-lvm:0,import-from=/root/ubuntu-22.04-server-cloudimg-amd64.img
 qm set <VM ID> --boot order=virtio0
 qm set <VM ID> --ide2 local-lvm:cloudinit
-qm set <VM ID> --nameserver 192.168.0.1
 # qm set <VM ID> --nameserver 192.168.0.1 --searchdomain example.com
 ```
 
