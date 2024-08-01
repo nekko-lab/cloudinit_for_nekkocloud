@@ -91,11 +91,28 @@ variable "NC_REGION_PROD_IP" {
 }
 
 
+variable "NC_RSC_POOL" {
+  description = "The NekkoCloud resource pool"
+  type        = string
+  default     = "dev"
+}
+
+
 # VM CONFIGURATION
 variable "vm_name" {
   description = "The name of the VM"
   type        = string
   default     = ""
+}
+
+
+variable "vm_br" {
+  description = "The bridge to assign to the VM"
+  type        = map(string)
+  default     = {
+    "dev"  = "vmbr1128",
+    "prod" = "vmbr1001"
+  }
 }
 
 
