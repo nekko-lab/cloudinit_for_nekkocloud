@@ -29,9 +29,9 @@ resource "proxmox_vm_qemu" "nc-vm-1" {
       }
     }
     ide {
-      ide0 {
-        cdrom {
-          iso = local.ci_name
+      ide2 {
+        cloudinit {
+          storage = local.storage_pool
         }
       }
     }
