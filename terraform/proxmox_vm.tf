@@ -28,7 +28,7 @@ resource "proxmox_vm_qemu" "nc-vm-1" {
       }
     }
     ide {
-      ide2 { # Cloud-init disk
+      ide2 { # cloud-init disk
         cloudinit {
           storage = local.storage_pool  # Storage pool
         }
@@ -42,8 +42,8 @@ resource "proxmox_vm_qemu" "nc-vm-1" {
     firewall = false          # Enable firewall
   }
 
-  ciuser     = var.username       # Cloud-init username
-  cipassword = var.password       # Cloud-init password
+  ciuser     = var.username       # cloud-init username
+  cipassword = var.password       # cloud-init password
   sshkeys    = var.public_key     # SSH public key
   agent      = local.qemu_agent   # QEMU agent
   ipconfig0  = "ip=dhcp,ip6=auto" # DHCP: Dynamic IP address
