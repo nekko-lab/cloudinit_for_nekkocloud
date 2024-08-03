@@ -1,30 +1,30 @@
-# Description: This file contains the configuration for the backend of the terraform state file. This file is used to store the state file in the Proxmox server.
 # locals: Argument reference
 locals {
-  target_node   = "${var.NC_REGION}"
-  boot          = "order=virtio0"
-  onboot        = true
-  bootdisk      = "virtio0, ide2"
-  os_type       = "cloud-init"
-  cputype       = "host"
-  scsi_ctl_type = "virtio-scsi-pci"
-  type          = "virtio"
-  storage_pool  = "local-lvm" # cephfs local-nvme local-lvm
-  qemu_agent    = 0
+  target_node   = var.NC_REGION        # Proxmox node
+  boot          = "order=virtio0;ide2" # Boot order
+  onboot        = true                 # Start VM on boot
+  bootdisk      = "virtio0, ide2"      # Boot disk
+  os_type       = "cloud-init"         # OS type
+  cputype       = "host"               # CPU type
+  scsi_ctl_type = "virtio-scsi-pci"    # SCSI controller type
+  type          = "virtio"             # Disk type
+  storage_pool  = "local-lvm"          # cephfs local-nvme local-lvm
+  qemu_agent    = 0                    # QEMU agent
 }
 
-# locals: VM config Ubuntu 22.04 nc-vm-ubuntu22.04
+# locals: VM configuration
 locals {
   os_name     = "ubuntu"
   ci_name     = "ubuntu-22.04-server-cloudimg-amd64"
-  description = "Ubuntu 22.04 VM on Proxmox by Terraform"
-  vmid        = 4000
+  description = "Ubuntu 22.04 server VM on Proxmox VE, ${var.NC_REGION} region by Terraform"
+  vmid        = 4000 
   clone_num   = 1
   cores       = 2
   memory      = 4096
   balloon     = 1024
   disk_size   = 32
   sockets     = 1
+  #If you want to use a static IP address, uncomment the following line and comment the above line.
   # network_num = 
   ip_add_net  = var.NC_REGION_DEV_IP[var.NC_REGION]
   vmbr_num    = var.vm_br[var.NC_RSC_POOL]

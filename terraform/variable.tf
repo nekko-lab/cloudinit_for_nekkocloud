@@ -62,15 +62,16 @@ variable "PM_LOG_FILE" {
 }
 
 
+# NEKKO CLOUD PROVIDER CONFIGURATION
 variable "NC_REGION" {
-  description = "The NekkoCloud region"
+  description = "The Nekko Cloud region"
   type        = string
   default     = ""  # Set Proxmox region: mk, ur, tu
 }
 
 
 variable "NC_REGION_DEV_IP" {
-  description = "The NekkoCloud region IPv6 address"
+  description = "The Nekko Cloud region IPv6 address"
   type        = map(string)
   default     = {
     "mk" = "fd12:e644:6d9d:0000::",
@@ -81,7 +82,7 @@ variable "NC_REGION_DEV_IP" {
 
 
 variable "NC_REGION_PROD_IP" {
-  description = "The NekkoCloud region IPv6 address"
+  description = "The Nekko Cloud region IPv6 address"
   type        = map(string)
   default     = {
     "mk" = "fd12:e644:6d9d:0080::",
@@ -92,7 +93,7 @@ variable "NC_REGION_PROD_IP" {
 
 
 variable "NC_RSC_POOL" {
-  description = "The NekkoCloud resource pool"
+  description = "The Nekko Cloud resource pool"
   type        = string
   default     = "dev"
 }
