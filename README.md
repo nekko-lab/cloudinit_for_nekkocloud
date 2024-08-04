@@ -1,13 +1,15 @@
 # Terraform × cloud-initでVMのセットアップをいい感じにする
 
+[**telmate-3.0.1-rc3**](https://registry.terraform.io/providers/Telmate/proxmox/latest/docs)
+
 ---
 
 ## はじめに
 
 どうも、ネットワークコンテンツ研究会に所属しております、[cyokozai](https://x.com/cyokozai0)と申します。
-ここでは、ネットワークコンテンツ研究会のプロジェクトの一つであるNekkoCloudにIaCを導入し、NekkoCloudの環境構築の自動化を目的とします。
+ここでは、ネットワークコンテンツ研究会のプロジェクトの一つであるNekko CloudにIaCを導入し、Nekko Cloudの環境構築の自動化を目的とします。
 最近流行ってるじゃないですか、やれIaaSだのKaaSだのSaaSだの...。
-私たちのNekkoCloudだってイカしたプロビジョニングツールを導入して、チームメンバーのみんなが自由に計算リソースを使える環境を用意したいんです！
+私たちのNekko Cloudだってイカしたプロビジョニングツールを導入して、チームメンバーのみんなが自由に計算リソースを使える環境を用意したいんです！
 ってことで、Proxmox VEのVM作成をTerraformとcloud-initを使って簡単にできるようにする、そんな感じのリポジトリです🌟  
 
 ### TL;DR
@@ -172,7 +174,7 @@ wget https://cloud-images.ubuntu.com/jammy/current/jammy-server-cloudimg-amd64.i
 - テンプレート用のVMを作成
 
 ```bash
-qm create <VM ID> --memory 2048 --net0 virtio,bridge=vmbr0
+qm create <VM ID> --memory 4096 --balloon 1024 --net0 virtio,bridge=vmbr0
 ```
 
 - localのstorageにISOファイルをインポート
@@ -184,13 +186,12 @@ qm importdisk <VM ID> ubuntu-22.04-server-cloudimg-amd64.img local-lvm
 - VMをセットアップ（nameserverはネットワークごとに任意のIPを設定）
 
 ```bash
-qm set <VM ID> --scsi0 local-lvm:0,import-from=/root/ubuntu-22.04-server-cloudimg-amd64.img
 qm set <VM ID> --name <VM Name>
 qm set <VM ID> --scsihw virtio-scsi-pci --virtio0 local-lvm:vm-<VM ID>-disk-0
+qm set <VM ID> --virtio0 local-lvm:0,import-from=/root/ubuntu-22.04-server-cloudimg-amd64.img
 qm set <VM ID> --boot order=virtio0
 qm set <VM ID> --ide2 local-lvm:cloudinit
-qm set <VM ID> --nameserver 192.168.0.1
-# qm set <VM ID> --nameserver 192.168.0.1 --searchdomain example.com
+# qm set <VM ID> --nameserver 192.168.0.1
 ```
 
 - VMテンプレートにコンバートする
@@ -315,7 +316,7 @@ commands will detect it and remind you to do so if necessary.
   `terraform.tfvars.template`を参考に内容を記述すること。
   
   - PROXMOX PROVIDER CONFIGURATION
-    - `NC_REGION`: NekkoCloud PVE Regionの略語（幕張 => mk, 浦和 => ur, 津田沼 => tu）
+    - `NC_REGION`: Nekko Cloud PVE Regionの略語（幕張 => mk, 浦和 => ur, 津田沼 => tu）
     - `PM_API_TOKEN_ID`: # Permissions.API Tokensで作成したAPI Token
     - `PM_API_TOKEN_SECRET`: # Permissions.API Tokensで作成したAPI Secret
     - `PM_HOST_IP`: 各PVEリージョンのIPのホスト部（Number）
@@ -384,11 +385,11 @@ Destroy complete! Resources: 2 destroyed.
 
 ## おわりに
 
-ここまでお疲れ様でした！今日からあなたもNekkoCloudのリージョン管理者の仲間入りです🙌  
+ここまでお疲れ様でした！今日からあなたもNekko Cloudのリージョン管理者の仲間入りです🙌  
 今回のIaC実装を経て、チームメンバーの作業効率の向上に関する課題は多く残っていると考えています。
 チームメンバーが求めているものは、自由に触って好きなように作ったり壊したりできるVMを、いつでも使える環境ではないでしょうか？
 IaC導入の一番のメリットは、インフラストラクチャの自動構築です。
-これは、NekkoCloudの各リージョン管理者からの視点では一定水準をクリアしたと認識しています。
+これは、Nekko Cloudの各リージョン管理者からの視点では一定水準をクリアしたと認識しています。
 では、リージョン管理者以外のチームメンバーは、VMを作成するのに一からTerraformを学ぶ必要があるのでしょうか？
 それは本来やりたいことからかけ離れた、あまりにも遠回りな選択肢なのです。  
 とまあ、説教垂れててもこういった労苦（Toil: トイル）は消えて無くなったりしないので、一つずつテクノロジーを使って解決していきましょう。
