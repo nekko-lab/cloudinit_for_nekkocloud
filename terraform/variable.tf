@@ -62,45 +62,58 @@ variable "PM_LOG_FILE" {
 }
 
 
-variable "PM_HOST_IP" {
-  description = "The Proxmox VE host number"
-  type        = number
-  default     = 255
-}
-
-
+# NEKKO CLOUD PROVIDER CONFIGURATION
 variable "NC_REGION" {
-  description = "The NekkoCloud region"
+  description = "The Nekko Cloud region"
   type        = string
-  default     = "none"
+  default     = ""  # Set Proxmox region: mk, ur, tu
 }
 
 
-variable "NC_MK_IP" {
-  description = "The NekkoCloud MK IP"
-  type        = string
-  default     = ""
+variable "NC_REGION_DEV_IP" {
+  description = "The Nekko Cloud region IPv6 address"
+  type        = map(string)
+  default     = {
+    "mk" = "fd12:e644:6d9d:0000::",
+    "ur" = "fd12:e644:6d9d:0100::",
+    "tu" = "fd12:e644:6d9d:0200::"
+  }
 }
 
 
-variable "NC_UR_IP" {
-  description = "The NekkoCloud UR IP"
-  type        = string
-  default     = ""
+variable "NC_REGION_PROD_IP" {
+  description = "The Nekko Cloud region IPv6 address"
+  type        = map(string)
+  default     = {
+    "mk" = "fd12:e644:6d9d:0080::",
+    "ur" = "fd12:e644:6d9d:0180::",
+    "tu" = "fd12:e644:6d9d:0280::"
+  }
 }
 
 
-variable "NC_TU_IP" {
-  description = "The NekkoCloud TU IP"
+variable "NC_RSC_POOL" {
+  description = "The Nekko Cloud resource pool"
   type        = string
-  default     = ""
+  default     = "dev"
 }
+
 
 # VM CONFIGURATION
 variable "vm_name" {
   description = "The name of the VM"
   type        = string
   default     = ""
+}
+
+
+variable "vm_br" {
+  description = "The bridge to assign to the VM"
+  type        = map(string)
+  default     = {
+    "dev"  = "vmbr1128",
+    "prod" = "vmbr1001"
+  }
 }
 
 
